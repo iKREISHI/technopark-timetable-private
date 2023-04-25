@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% block content %}
+<h1>Login</h1><hr>
+    {% if form.error %}
+        <p>{{ form.errors.error }}</p>
+    {% endif %}
+<form action="{% url 'login' %}" method="post">
+{% bootstrap_form form %}
+{% csrf_token %}
+<br><button type="submit" class="btn btn-success">Отправить</button>
+</form>
+    <a href="{% url 'password_reset' %}" style="display: none">Забыли пароль?</a>
+{% endblock %}

@@ -2,12 +2,12 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.views import View
 
-from users.forms import UserRegisterForm
+from users.forms.registration import UserRegisterForm
 
 
 # Create your views here.
 class Register(View):
-    template_name = "users/register.html"
+    template_name = "registration/register.html"
     context = {
         'title': 'Регистрация пользователя',
         'form': UserRegisterForm
@@ -26,6 +26,6 @@ class Register(View):
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
             login(request, user)
-            return redirect('home')
+            return redirect('homepage')
 
         return render(request, self.template_name, self.context)

@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models import CASCADE
 
 from users.models.users import User
-from users.models.university import Auditorium, University_Building
+from users.models.university import Auditorium
 
 
 class Type_TimetableItem(models.Model):

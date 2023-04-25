@@ -5,10 +5,10 @@ from users.models.university import University_Unit
 
 
 class User(AbstractUser):
-    university_unit = models.ForeignKey(University_Unit, on_delete=CASCADE, null=True, blank=True)
-    phone_number = models.CharField(max_length=17, null=True, blank=True)
+    university_unit = models.ForeignKey(University_Unit, on_delete=CASCADE, null=True, blank=True, verbose_name='Подразделение Университета')
+    phone_number = models.CharField(max_length=17, null=True, blank=True, verbose_name='Номер телефона')
     is_verificated = models.BooleanField(default=False, blank=True)
-    info = models.TextField()
+    info = models.TextField(verbose_name='Дополнительная информация')
 
     def __str__(self):
         return self.username
