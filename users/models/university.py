@@ -3,9 +3,9 @@ from django.db.models import CASCADE
 
 
 class University_Unit(models.Model):
-    name = models.CharField(max_length=60, blank=True)
-    abbreviation = models.CharField(max_length=10)
-    info = models.TextField()
+    name = models.CharField(max_length=60, blank=True, verbose_name='Название подразделения')
+    abbreviation = models.CharField(max_length=10, verbose_name='Аббревиатура подразделения')
+    info = models.TextField(verbose_name='Информация о подразделения')
 
     def __str__(self):
         return self.name
