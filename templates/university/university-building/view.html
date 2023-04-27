@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<h1 style="text-align: center">{{ title }}</h1><hr>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Название</th>
+      <th scope="col">Адрес</th>
+      <th scope="col">Информация</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for el in data %}
+    <tr>
+      <td>{{ el.name }}</td>
+      <td>{{ el.address }}</td>
+      <td>{{ el.info }}</td>
+    </tr>
+   {% endfor %}
+  </tbody>
+</table>
+<a class="btn btn-success" href="{% url 'add-university-building' %}">Добавить</a>
+
+{% endblock %}

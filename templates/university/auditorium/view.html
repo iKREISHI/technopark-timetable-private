@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<h1 style="text-align: center">{{ title }}</h1><hr>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Название</th>
+      <th scope="col">Корпус</th>
+      <th scope="col">Подразделение</th>
+      <th scope="col">Корпус</th>
+      <th scope="col">Тип</th>
+      <th scope="col">Вместимость</th>
+      <th scope="col">Информация</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for el in data %}
+    <tr>
+      <td>{{ el.name }}</td>
+      <td>{{ el.building }}</td>
+      <td>{{ el.university_unit }}</td>
+      <td>{{ el.type }}</td>
+      <td>{{ el.area }}</td>
+      <td>{{ el.capacity }}</td>
+      <td>{{ el.info }}</td>
+    </tr>
+   {% endfor %}
+  </tbody>
+</table>
+<a class="btn btn-success" href="{% url 'add-university-auditorium' %}">Добавить</a>
+
+{% endblock %}
