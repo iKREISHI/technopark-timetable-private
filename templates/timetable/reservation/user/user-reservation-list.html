@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<h1 style="text-align: center">{{ title }}</h1><hr>
+
+<div>
+    <p>текущие заявки</p>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Название</th>
+                <th scope="col">Дата</th>
+                <th scope="col">Время</th>
+                <th scope="col">Аудитория</th>
+                <th scope="col">Количество человек</th>
+                <th scope="col">Статус</th>
+                <th scope="col">Редактировать</th>
+                <th scope="col">Удалить</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in data %}
+                <tr>
+                    <th scope="row">{{ item.name }}</th>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.start_time }} - {{ item.end_time }}</td>
+                    <!--<td>{{ item.auditorium }}</td>-->
+                    <td>
+                        {% for aud in item.auditorium.all %}
+                            {{ aud.name }}
+                        {% endfor %}
+                    </td>
+                    <td>{{ item.amount_people }}</td>
+                    <!--<td>{{ item.is_approved }}</td>
+                    <td>
+                        {% if item.is_approved %}
+                            Одобрено
+                            {% else %}
+                            Не одобрено
+                        {% endif %}
+                    </td>-->
+                    <td>
+                        {% if item.status == 'PENDING' %}
+                            Ожидает одобрения
+                            {% elif item.status == 'APPROVED' %}
+                                Одобрено
+                            {% else %}
+                                Отклонено
+                        {% endif %}
+                    </td>
+                    <td>Редактировать</td>
+                    <td>Удалить</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
