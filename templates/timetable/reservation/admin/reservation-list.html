@@ -11,6 +11,7 @@
                 <th scope="col">Время</th>
                 <th scope="col">Аудитория</th>
                 <th scope="col">Количество человек</th>
+                <th scope="col">Дополнительная информация</th>
                 <th scope="col">Статус</th>
 
             </tr>
@@ -27,7 +28,7 @@
                         {% endfor %}
                     </td>
                     <td>{{ item.amount_people }}</td>
-
+                    <td>{{ item.info }}</td>
                     <td>
                         <a href="/timetable/approve-reservation/{{ item.id }}/APPROVED" class="btn btn-success">Одобрить</a>
                         <a href="/timetable/approve-reservation/{{ item.id }}/REJECTED" class="btn btn-danger">Отклонить</a>

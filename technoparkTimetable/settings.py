@@ -36,6 +36,7 @@ STATICFILES_DIRS = (
 
 LOGOUT_REDIRECT_URL = "homepage"
 LOGIN_REDIRECT_URL = "homepage"
+LOGIN_URL = 'login'
 
 # Application definition
 

@@ -32,26 +32,23 @@ class ReservationAudienceForm(forms.ModelForm):
     class Meta:
         model = TimetableItem
         fields = (
-            'name', 'type', 'date', 'start_time', 'end_time', 'auditorium', 'amount_people'
+            'name', 'type', 'date', 'start_time', 'end_time', 'auditorium', 'amount_people', 'info'
         )
         exclude = (
             'user',
         )
 
-'''
     def clean(self):
         cleaned_data = super().clean()
         auditorium = cleaned_data.get('auditorium')
         start_time = cleaned_data.get('start_time')
         end_time = cleaned_data.get('end_time')
         date = cleaned_data.get('date')
+
         if auditorium and date and start_time and end_time:
-            # Проверяем, занята ли аудитория на выбранные дату и время
-            bookings = TimetableItem.objects.filter(auditorium=auditorium, date=date)
-            for booking in bookings:
-                # Проверяем, пересекается ли забронированное время с выбранным
-                if booking.start_time < end_time and start_time < booking.end_time:
-                    raise forms.ValidationError(
-                        f'Аудитория уже занята на выбранное время ({booking.start_time} - {booking.end_time})')
-                        
-'''
+            # Check if any bookings exist for the selected auditorium, date, and time range
+            bookings = TimetableItem.objects.filter(auditorium__in=auditorium, date=date, start_time__lt=end_time,
+                                                    end_time__gt=start_time)
+            if bookings.exists():
+                # raise ValidationError('The auditorium is already booked for the selected time.')
+                self.add_error(None, 'Аудитория уже забронирован на выбранное время.')

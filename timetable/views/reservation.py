@@ -22,13 +22,16 @@ class AddTimeTableReservation(LoginRequiredMixin, View):
     def get(self, request):
         #if not request.user.has_perm(self.add_perm):
           #  raise PermissionDenied
+        context = self.context
+        if not request.user.is_verificated:
+            return redirect('waiting-user-confirm')
 
-        return render(request, self.template_name, self.context)
+        return render(request, self.template_name, context)
 
     def post(self, request):
-        if not request.user.has_perm(self.add_perm):
-            raise PermissionDenied
-
+        #if not request.user.has_perm(self.add_perm):
+            #raise PermissionDenied
+        context = self.context
         form = self.form(request.POST)
         form.instance.organazer = request.user
         if form.is_valid():
@@ -38,5 +41,27 @@ class AddTimeTableReservation(LoginRequiredMixin, View):
                 form.instance.datetime_approved = timezone.now()
             form.save()
             return redirect('list-user-reservation')
+        self.context.update({'form': form})
+        return render(request, self.template_name, context)
+'''
+            cleaned_data = form.cleaned_data
+            auditorium = cleaned_data.get('auditorium')
+            start_time = cleaned_data.get('start_time')
+            end_time = cleaned_data.get('end_time')
+            date = cleaned_data.get('date')
 
-        return render(request, self.template_name, self.context)
+            if auditorium and date and start_time and end_time:
+                # Check if any bookings exist for the selected auditorium, date, and time range
+                bookings = TimetableItem.objects.filter(auditorium__in=auditorium, date=date, start_time__lt=end_time,
+                                                        end_time__gt=start_time)
+                if bookings.count() > 1:
+                    form.add_error(None, 'На выбранное время найдено несколько бронирований.')
+                    self.context['form'] = form
+                    return render(request, self.template_name, self.context)
+                elif bookings.exists():
+                    # Handle the case when a single booking exists
+                    booking = bookings.first()
+                    form.add_error(None,
+                                   f'Аудитория уже забронирован на выбранное время ({booking.start_time} - {booking.end_time}).')
+                    self.context['form'] = form
+                    return render(request, self.template_name, self.context)'''

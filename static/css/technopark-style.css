@@ -1,0 +1,19 @@
+.techno-nav-blue-bolder {
+    color: #00ffff;
+    font-weight: bolder;
+
+}
+
+.navbar-techno .navbar-brand {
+    color: white;
+}
+
+.navbar-custom {
+    background-color: lightgreen;
+}
+/* Modify brand and text color */
+
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-text {
+    color: green;
+}

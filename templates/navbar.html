@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="{% url 'homepage' %}">Расписание Технопарка</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -6,16 +6,19 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
+        <li class="nav-item" hidden="hidden">
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'add-user-reservation' %}">Забронировать аудиторию</a>
+          <a class="nav-link active" href="{% url 'add-user-reservation' %}">Забронировать аудиторию</a>
         </li>
       {% if user.is_superuser %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'list-admin-reservation' %}">Список заявок</a>
+          <a class="nav-link active" href="{% url 'list-admin-reservation' %}">Список заявок</a>
         </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'list-admin-confirm-user' %}">Список новых пользователей</a>
+          </li>
       {% endif %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

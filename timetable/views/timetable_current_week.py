@@ -31,12 +31,3 @@ class TimeTableCurrentWeekView(View):
 
     def post(self, request):
         pass
-
-
-class TimeTableCurrentWeekListView(ListView):
-    template_name = 'timetable/schedule/current_week.html'
-    model = TimetableItem
-    extra_context = {
-        'title': 'Расписание на текущую неделю',
-        'auditoriums': Auditorium.objects.all(),
-    }

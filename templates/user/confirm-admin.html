@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<h1 style="text-align: center">{{ title }}</h1><hr>
+     <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Логин</th>
+                <th scope="col">Дата регистрации</th>
+                <th scope="col">ФИО</th>
+                <th scope="col">Почта</th>
+                <th scope="col">Номер мобильного телефона</th>
+                <th scope="col">Подразделение университета</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in data %}
+                <tr>
+                    <th scope="row">{{ item.username }}</th>
+                    <td>{{ item.date_joined }}</td>
+                    <td>{{ item.last_name }} {{ item.first_name }} {{ item.patronymic }}</td>
+                    <td>{{ item.email }}</td>
+                    <td>{{ item.phone_number }}</td>
+                    <td>{{ item.university_unit }}</td>
+                    <td>
+                        <p><a href="/users/confirm-new-user/{{ item.id }}/APPROVED" class="btn btn-success">Одобрить</a></p>
+                        <p><a href="/users/confirm-new-user/{{ item.id }}/REJECTED" class="btn btn-danger">Отклонить</a></p>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
