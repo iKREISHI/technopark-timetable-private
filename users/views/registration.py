@@ -14,10 +14,11 @@ class Register(View):
     }
 
     def get(self, request):
-
-        return render(request, self.template_name, self.context)
+        context = self.context
+        return render(request, self.template_name, context)
 
     def post(self, request):
+        context = self.context
         form = UserRegisterForm(request.POST)
 
         if form.is_valid():
@@ -29,4 +30,5 @@ class Register(View):
             login(request, user)
             return redirect('homepage')
 
-        return render(request, self.template_name, self.context)
+        self.context.update({'form': form})
+        return render(request, self.template_name, context)

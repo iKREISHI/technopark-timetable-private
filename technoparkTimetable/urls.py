@@ -9,5 +9,6 @@ urlpatterns = [
     path('', TimeTableCurrentWeekView.as_view(), name='homepage'),
     path('users/', include('users.urls')),
     path('timetable/', include('timetable.urls')),
+    path('captcha/', include('captcha.urls')),
 
 ]
