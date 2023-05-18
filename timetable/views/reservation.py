@@ -17,6 +17,7 @@ class AddTimeTableReservation(LoginRequiredMixin, View):
         'url_form': 'add-user-reservation'
     }
     add_perm = 'timetable.add_timetableitem'
+    change_perm = 'timetable.change_timetableitem'
     view_perm = 'timetable.view_timetableitem'
 
     def get(self, request):
@@ -35,13 +36,15 @@ class AddTimeTableReservation(LoginRequiredMixin, View):
         form = self.form(request.POST)
         form.instance.organazer = request.user
         if form.is_valid():
-            if request.user.is_superuser:
+            if request.user.is_superuser or (
+                    request.user.has_perm(self.add_perm) and request.user.has_perm(self.change_perm) and request.user.is_staff
+            ):
                 form.instance.status = 'APPROVED'
                 form.instance.who_approved = request.user
                 form.instance.datetime_approved = timezone.now()
             form.save()
             return redirect('list-user-reservation')
-        self.context.update({'form': form})
+        context.update({'form': form})
         return render(request, self.template_name, context)
 '''
             cleaned_data = form.cleaned_data

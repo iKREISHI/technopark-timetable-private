@@ -30,5 +30,5 @@ class Register(View):
             login(request, user)
             return redirect('homepage')
 
-        self.context.update({'form': form})
+        context.update({'form': form})
         return render(request, self.template_name, context)

@@ -122,4 +122,4 @@ class UserRegisterForm(UserCreationForm):
         if username and email and phone_number:
             user = UserModel.objects.filter(username=username, email=email, phone_number=phone_number)
             if user.exists():
-                self.add_error(None, 'Пользователь с таким именем существует')
+                self.add_error(None, f'Пользователь с  именем {username} существует')

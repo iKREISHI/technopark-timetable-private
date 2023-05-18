@@ -13,6 +13,8 @@ class WaitingUserConfirm(View):
     }
 
     def get(self, request):
+        if request.user.is_verificated:
+            return redirect('homepage')
         return render(request, self.template_name, self.context)
 
     def post(self, request):

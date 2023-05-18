@@ -44,11 +44,21 @@ class ReservationAudienceForm(forms.ModelForm):
         start_time = cleaned_data.get('start_time')
         end_time = cleaned_data.get('end_time')
         date = cleaned_data.get('date')
+        amount = cleaned_data.get('amount_people')
 
-        if auditorium and date and start_time and end_time:
+        if auditorium and date and start_time and end_time and amount:
             # Check if any bookings exist for the selected auditorium, date, and time range
             bookings = TimetableItem.objects.filter(auditorium__in=auditorium, date=date, start_time__lt=end_time,
                                                     end_time__gt=start_time)
             if bookings.exists():
                 # raise ValidationError('The auditorium is already booked for the selected time.')
                 self.add_error(None, 'Аудитория уже забронирован на выбранное время.')
+
+            if start_time >= end_time:
+                self.add_error('start_time', 'некорректно веденно время')
+
+            if date < datetime.date.today():
+                self.add_error('date', 'некорректно веденна дата')
+
+            if amount <= 0:
+                self.add_error('amount_people', 'некорректно введено количество человек')

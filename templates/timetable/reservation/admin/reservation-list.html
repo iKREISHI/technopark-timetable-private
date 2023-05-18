@@ -19,7 +19,13 @@
         <tbody>
             {% for item in data %}
                 <tr>
-                    <th scope="row">{{ item.name }}</th>
+                    <th scope="row">
+                        {% if user.is_superuser %}
+                            <a href="/timetable/item/{{ item.id }}/update/" class="link-success">{{ item.name }}</a>
+                            {% else %}
+                                {{ item.name }}
+                        {% endif %}
+                    </th>
                     <td>{{ item.date }}</td>
                     <td>{{ item.start_time }} - {{ item.end_time }}</td>
                     <td>
