@@ -13,6 +13,7 @@
                         <th scope="col">Дата</th>
                         <th scope="col">Время</th>
                         <th scope="col">Название</th>
+                        <th scope="col">Ответственный</th>
                         <!--<th scope="col"></th>
                         <th scope="col"></th>
                         <th scope="col"></th>-->
@@ -24,7 +25,14 @@
                         <tr>
                             <td>{{ item.date }}</td>
                             <td>{{ item.start_time|time:"H:i" }} - {{ item.end_time|time:"H:i" }}</td>
-                            <td>{{ item.name }} - Ответственный: {{ item.organazer }}</td>
+                            <td>{{ item.name }}</td>
+                            <td>
+                                {% if item.organazer.last_name and item.organazer.first_name %}
+                                    {{ item.organazer.last_name }} {{ item.organazer.first_name }}
+                                    {% else %}
+                                        Пользователь: {{ item.organazer }}
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endif %}
                     {% endfor %}

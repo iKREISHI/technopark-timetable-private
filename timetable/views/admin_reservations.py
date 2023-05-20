@@ -31,7 +31,7 @@ class AdminApproveReservationList(LoginRequiredMixin, View):
     def post(self, request):
         pass
 
-
+# пока не используется
 class AdminApproveReservation(LoginRequiredMixin, View):
     model = TimetableItem
     add_perm = 'timetable.add_timetableitem'

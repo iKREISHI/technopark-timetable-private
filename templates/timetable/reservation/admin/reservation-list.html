@@ -20,11 +20,7 @@
             {% for item in data %}
                 <tr>
                     <th scope="row">
-                        {% if user.is_superuser %}
-                            <a href="/timetable/item/{{ item.id }}/update/" class="link-success">{{ item.name }}</a>
-                            {% else %}
-                                {{ item.name }}
-                        {% endif %}
+                        {{ item.name }}
                     </th>
                     <td>{{ item.date }}</td>
                     <td>{{ item.start_time }} - {{ item.end_time }}</td>
@@ -36,8 +32,12 @@
                     <td>{{ item.amount_people }}</td>
                     <td>{{ item.info }}</td>
                     <td>
-                        <a href="/timetable/approve-reservation/{{ item.id }}/APPROVED" class="btn btn-success">Одобрить</a>
+                        <!--<a href="/timetable/approve-reservation/{{ item.id }}/APPROVED" class="btn btn-success">Одобрить</a>
                         <a href="/timetable/approve-reservation/{{ item.id }}/REJECTED" class="btn btn-danger">Отклонить</a>
+                        -->
+                        <a href="{% url 'approve-reservation' item.pk 'APPROVED' %}" class=" bi bi-check-square-fill text-success"></a>
+                        <a href="{% url 'approve-reservation' item.pk 'REJECTED' %}" class="bi bi-x-square-fill text-danger"></a>
+                        <a href="{% url 'timetableitem-update' item.pk %}" class="bi bi-pencil-fill text-primary"></a>
                     </td>
                 </tr>
             {% endfor %}
