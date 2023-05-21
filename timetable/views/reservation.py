@@ -21,8 +21,6 @@ class AddTimeTableReservation(LoginRequiredMixin, View):
     view_perm = 'timetable.view_timetableitem'
 
     def get(self, request):
-        #if not request.user.has_perm(self.add_perm):
-          #  raise PermissionDenied
         context = self.context
         if not request.user.is_verificated:
             return redirect('waiting-user-confirm')
@@ -30,14 +28,14 @@ class AddTimeTableReservation(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request):
-        #if not request.user.has_perm(self.add_perm):
-            #raise PermissionDenied
         context = self.context
         form = self.form(request.POST)
         form.instance.organazer = request.user
         if form.is_valid():
             if request.user.is_superuser or (
-                    request.user.has_perm(self.add_perm) and request.user.has_perm(self.change_perm) and request.user.is_staff
+                    request.user.has_perm(self.add_perm)
+                    and request.user.has_perm(self.change_perm)
+                    and request.user.is_staff
             ):
                 form.instance.status = 'APPROVED'
                 form.instance.who_approved = request.user

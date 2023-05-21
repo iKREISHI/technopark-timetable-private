@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin, PermissionDenied
 from django.contrib.auth.decorators import login_required
 from timetable.models.timetable import TimetableItem
 from django.utils import timezone
+from datetime import date, timedelta
 
 
 class AdminApproveReservationList(LoginRequiredMixin, View):
@@ -19,10 +20,14 @@ class AdminApproveReservationList(LoginRequiredMixin, View):
         if not request.user.has_perm(self.add_perm) and not request.user.has_perm(self.change_perm):
             raise PermissionDenied
 
-        items = self.model.objects.filter(status='PENDING')
+        expiry_date = date.today() - timedelta(days=1)  # Определите период, после которого заявки считаются старыми
+        old_items = self.model.objects.filter(status='PENDING', date__lt=expiry_date)
+        old_items.update(status='REJECTED')
+
+        items = self.model.objects.filter(status='PENDING').order_by('date', 'start_time', 'end_time')
 
         context = {
-            'title': 'Одобрение заявок',
+            'title': 'Обработка заявок',
             'data': items,
             'url_form': ''
         }
@@ -31,7 +36,7 @@ class AdminApproveReservationList(LoginRequiredMixin, View):
     def post(self, request):
         pass
 
-# пока не используется
+
 class AdminApproveReservation(LoginRequiredMixin, View):
     model = TimetableItem
     add_perm = 'timetable.add_timetableitem'
