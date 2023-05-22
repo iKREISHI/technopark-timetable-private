@@ -2,6 +2,6 @@ venv
 .idea
 __pycache__
 docker/database/TimeTableDB/pgdata
-docker/database/'2. Init Database'
+docker/database/TimeTableDB/2.\ Init\ Database
 */__pycache__/*
 *.pyc
