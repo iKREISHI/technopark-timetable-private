@@ -21,7 +21,7 @@ class TimeTableCurrentWeekView(View):
             .order_by('date', 'start_time', 'end_time')'''
 
         context = {
-            'title': 'Расписание на текущую неделю',
+            'title': f'Расписание на текущую неделю',
             'auditoriums': auditoriums,
             'start_week': start_week,
             'end_week': end_week,

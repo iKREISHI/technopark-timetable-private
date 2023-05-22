@@ -5,6 +5,7 @@ from timetable.views.admin_reservations import AdminApproveReservationList, Admi
 from timetable.views.timetable_current_week import TimeTableCurrentWeekView
 from timetable.views.timetable_item_edit import TimeTableItemUpdateView
 from timetable.views.timetable_item_delete import TimeTableItemDeleteView
+from timetable.views.timetable_week import TimetableWeekView
 
 urlpatterns = [
     path('add-reservation/', AddTimeTableReservation.as_view(), name='add-user-reservation'),
@@ -14,4 +15,5 @@ urlpatterns = [
     path('current-week/', TimeTableCurrentWeekView.as_view(), name='current-week'),
     path('item/<int:pk>/update/', TimeTableItemUpdateView.as_view(), name='timetableitem-update'),
     path('item/<int:pk>/delete', TimeTableItemDeleteView.as_view(), name='timetableitem-delete'),
+    path('week-<str:monday>-<str:sunday>', TimetableWeekView.as_view(), name='timetable-week'),
 ]
