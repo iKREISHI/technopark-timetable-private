@@ -13,9 +13,12 @@ class TimetableWeekView(View):
     def get(self, request, monday, sunday):
         mon = datetime.strptime(monday, '%d_%m_%y').date()
         sun = datetime.strptime(sunday, '%d_%m_%y').date()
+
         auditoriums = Auditorium.objects.all()
         context = {
-            'title': f'Расписание на неделю {mon} - {sun}',
+            'title': f'Расписание на неделю '
+                     f'{monday} '
+                     f'- {sunday}',
             'auditoriums': auditoriums,
             'start_week': mon,
             'end_week': sun,

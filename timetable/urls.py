@@ -11,7 +11,10 @@ urlpatterns = [
     path('add-reservation/', AddTimeTableReservation.as_view(), name='add-user-reservation'),
     path('list-reservation/', UserReservationsList.as_view(), name='list-user-reservation'),
     path('list-admin-reservation/', AdminApproveReservationList.as_view(), name='list-admin-reservation'),
-    path('approve-reservation/<int:reservation_id>/<str:status>/', AdminApproveReservation.as_view(), name='approve-reservation'),
+    path(
+        'approve-reservation/<int:reservation_id>/<str:status>/',
+        AdminApproveReservation.as_view(), name='approve-reservation'
+    ),
     path('current-week/', TimeTableCurrentWeekView.as_view(), name='current-week'),
     path('item/<int:pk>/update/', TimeTableItemUpdateView.as_view(), name='timetableitem-update'),
     path('item/<int:pk>/delete', TimeTableItemDeleteView.as_view(), name='timetableitem-delete'),

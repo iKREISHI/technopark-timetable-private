@@ -16,10 +16,6 @@ class TimeTableCurrentWeekView(View):
         start_week = today - timedelta(days=today.weekday())
         end_week = start_week + timedelta(days=6)
         auditoriums = Auditorium.objects.all()
-        '''data = self.model.objects\
-            .filter(date__range=[start_week, end_week], status='APPROVED', auditorium__in=auditoriums)\
-            .order_by('date', 'start_time', 'end_time')'''
-
         context = {
             'title': f'Расписание на текущую неделю',
             'auditoriums': auditoriums,
