@@ -71,8 +71,8 @@ class UserRegisterForm(UserCreationForm):
     )'''
 
     phone_number = PhoneNumberField(
-       label='Мобильный телефон', region='RU',
-
+       label='Мобильный телефон*', region='RU',
+        required=True,
     )
 
     university_unit = forms.ModelChoiceField(
