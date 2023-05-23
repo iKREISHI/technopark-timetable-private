@@ -10,14 +10,14 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th scope="col">Дата</th>
-                        <th scope="col">Время</th>
-                        <th scope="col">Название</th>
-                        <th scope="col">Ответственный</th>
+                        <th scope="col" width="15%">Дата</th>
+                        <th scope="col" width="15%">Время</th>
+                        <th scope="col" width="40%">Название</th>
+                        <th scope="col" width="30">Ответственный</th>
                     </tr>
                 </thead>
                 <tbody>
-                   {% for item in aud.timetableitem_set.all|dictsort:"date"  %}
+                   {% for item in aud.timetableitem_set.all|dictsort:"date"|dictsort:"start_time"  %}
                        {% if item.date >= start_week and item.date <= end_week %}
                         <tr>
                             <td>{{ item.date }}</td>

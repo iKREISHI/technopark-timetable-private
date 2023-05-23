@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils import timezone
 from django.views import View
 from django.views.generic.edit import UpdateView
@@ -27,9 +28,12 @@ class TimeTableItemUpdateView(LoginRequiredMixin, UpdateView):
     ]
 
     extra_context = {
-        'title': 'test',
+        'title': '',
         'url_redirect': '',
     }
+
+    def get_success_url(self):
+        return reverse('list-admin-reservation')
 
     def get(self, request, *args, **kwargs):
         if not request.user.is_superuser or not (
@@ -40,12 +44,14 @@ class TimeTableItemUpdateView(LoginRequiredMixin, UpdateView):
           and request.user.has_perm('timetable.delete_timetableitem')
         ):
             return HttpResponseRedirect("/")
+            # return redirect('current-week')
         self.object = self.get_object()
         self.extra_context.update({'title': f'Редактировать заявку: {self.object.name}'})
+
         return super().get(request, *args, **kwargs)
 
+    # валидация формы
     def form_valid(self, form):
-        # Дополнительная валидация формы
         start_time = form.cleaned_data.get('start_time')
         end_time = form.cleaned_data.get('end_time')
         date = form.cleaned_data.get('date')

@@ -25,10 +25,14 @@ class AddTimeTableReservation(LoginRequiredMixin, View):
         if not request.user.is_verificated:
             return redirect('waiting-user-confirm')
 
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, self.context)
 
     def post(self, request):
-        context = self.context
+        context = {
+            'title': 'Забронировать аудиторию',
+            'form': self.form,
+            'url_form': 'add-user-reservation'
+        }
         form = self.form(request.POST)
         form.instance.organazer = request.user
         if form.is_valid():
