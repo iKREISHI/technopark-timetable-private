@@ -38,6 +38,9 @@ LOGOUT_REDIRECT_URL = "homepage"
 LOGIN_REDIRECT_URL = "homepage"
 LOGIN_URL = 'login'
 
+PHONENUMBER_DEFAULT_REGION = 'RU'
+PHONENUMBER_DEFAULT_FORMAT='INTERNATIONAL'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap5',
     'captcha',
+    'phonenumber_field',
 
     'users',
     'timetable'

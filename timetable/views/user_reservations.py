@@ -17,14 +17,13 @@ class UserReservationsList(LoginRequiredMixin, View):
     view_perm = 'timetable.view_timetableitem'
 
     def get(self, request):
-        user = request.user
-        items = self.model.objects.filter(organazer=user)
-
+        if not request.user.is_verificated:
+            return redirect('waiting-user-confirm')
+        items = self.model.objects.filter(organazer=request.user)
         context = {
             'title': 'список моих заявок на бронирование аудиорий',
             'data': items,
         }
-
         return render(request, self.template_name, context)
 
     def post(self, request):
@@ -66,6 +65,8 @@ class UserReservationUpdateView(LoginRequiredMixin, UpdateView):
         return obj
 
     def get(self, request, *args, **kwargs):
+        if not request.user.is_verificated:
+            return redirect('waiting-user-confirm')
         self.object = self.get_object()
         self.extra_context.update({'title': f'Редактировать заявку: {self.object.name}'})
         return super().get(request, *args, **kwargs)

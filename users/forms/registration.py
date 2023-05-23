@@ -5,6 +5,9 @@ from django.utils.translation import gettext_lazy as _
 from captcha.fields import CaptchaField, CaptchaTextInput
 from users.models.university import University_Unit
 from users.models.users import User as UserModel
+from phonenumber_field.formfields import PhoneNumberField
+from phonenumber_field.widgets import PhoneNumberPrefixWidget
+
 
 User = get_user_model()
 
@@ -58,13 +61,18 @@ class UserRegisterForm(UserCreationForm):
         required=True
     )
 
-    phone_number = forms.CharField(
+    '''phone_number = forms.CharField(
         label="Номер мобильного телефона*",
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Введите ваш номер мобильного телефона'
         }),
         required=True
+    )'''
+
+    phone_number = PhoneNumberField(
+       label='Мобильный телефон', region='RU',
+
     )
 
     university_unit = forms.ModelChoiceField(
