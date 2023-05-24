@@ -6,16 +6,16 @@ build:
 	docker-compose exec web python manage.py loaddata users_data.json
 	docker-compose exec web python manage.py loaddata timetable_data.json
 
-stop-prod:
+stop:
 	docker-compose stop
 
-start-prod:
+start:
 	docker-compose up -d
 
-restart-prod:
+restart:
 	docker-compose restart
 
-psql-prod:
+psql:
 	docker-compose exec db psql --username=root_timetable --dbname=timetableDB
 
 rebuild-web:
