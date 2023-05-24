@@ -20,3 +20,9 @@ psql-prod:
 
 rebuild-web:
 	docker build .
+
+rebuild-compose:
+	docker-compose up -d --build
+	docker-compose exec web python manage.py migrate
+	docker-compose exec web python manage.py loaddata users_data.json
+	docker-compose exec web python manage.py loaddata timetable_data.json
