@@ -5,3 +5,5 @@ docker/database/TimeTableDB/pgdata
 docker/database/TimeTableDB/2.\ Init\ Database
 */__pycache__/*
 *.pyc
+app
+postgres_data
