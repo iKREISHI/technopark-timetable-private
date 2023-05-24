@@ -7,7 +7,12 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apk update \
     postgresql-dev gcc python3-dev musl-dev \
-    add apk add jpeg-dev zlib-dev libjpeg py3-pillow py3-wheel \
+    add apk add jpeg-dev zlib-dev libjpeg py3-pillow py3-wheel
+
+RUN apk add tiff-dev jpeg-dev openjpeg-dev zlib-dev freetype-dev lcms2-dev \
+    libwebp-dev tcl-dev tk-dev harfbuzz-dev fribidi-dev libimagequant-dev \
+    libxcb-dev libpng-dev \
+
 RUN pip install Pillow
 
 RUN pip install --upgrade pip
