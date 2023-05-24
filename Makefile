@@ -17,3 +17,6 @@ restart-prod:
 
 psql-prod:
 	docker-compose exec db psql --username=root_timetable --dbname=timetableDB
+
+rebuild-web:
+	docker build .
