@@ -17,7 +17,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                   {% for item in aud.timetableitem_set.all|dictsort:"date"|dictsort:"start_time"  %}
+                   {% for item in aud.timetableitem_set.all|dictsort:"start_time"|dictsort:"date"  %}
                        {% if item.date >= start_week and item.date <= end_week %}
                         <tr>
                             <td>{{ item.date }}</td>

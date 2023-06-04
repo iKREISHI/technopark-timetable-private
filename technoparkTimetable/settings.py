@@ -53,9 +53,11 @@ INSTALLED_APPS = [
     'bootstrap5',
     'captcha',
     'phonenumber_field',
+    'rest_framework',
 
     'users',
-    'timetable'
+    'timetable',
+    'api_v0',
 ]
 
 MIDDLEWARE = [

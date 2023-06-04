@@ -9,6 +9,11 @@ from timetable.views.timetable_item_edit import TimeTableItemUpdateView
 from timetable.views.timetable_item_delete import TimeTableItemDeleteView
 from timetable.views.timetable_week import TimetableWeekView
 
+from timetable.views.booking.booking import (
+    BookingTimeTableView,
+    BookingTimeTableWeekView
+)
+
 urlpatterns = [
     path('add-reservation/', AddTimeTableReservation.as_view(), name='add-user-reservation'),
     path('list-reservation/', UserReservationsList.as_view(), name='list-user-reservation'),
@@ -26,4 +31,10 @@ urlpatterns = [
     path('item/<int:pk>/update/', TimeTableItemUpdateView.as_view(), name='timetableitem-update'),
     path('item/<int:pk>/delete', TimeTableItemDeleteView.as_view(), name='timetableitem-delete'),
     path('week-<str:monday>-<str:sunday>', TimetableWeekView.as_view(), name='timetable-week'),
+    path('booking-timetable/<int:auditorium_id>', BookingTimeTableView.as_view(), name='booking-timetable'),
+    path(
+        'booking-timetable/<int:auditorium_id>/<str:monday>-<str:sunday>',
+        BookingTimeTableWeekView.as_view(),
+        name='booking-timetable-week'
+    ),
 ]

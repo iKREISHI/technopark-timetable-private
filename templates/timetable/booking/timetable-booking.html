@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block content %}
+<h1 style="text-align: center">{{ title }}</h1><hr>
+<div class="row justify-content-center">
+    <div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    {% for day in day_of_week %}
+                        <th scope="col">
+                            {{ day.date }} {{ day.month }} {{ day.weekday }}
+                        </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+        <tbody>
+            {% for item in timetable %}
+                <tr>
+                    {% for day in day_of_week %}
+                        {% if item.date == day.value %}
+                        <td {% if day.value >= today %}
+                            class="table-danger border-1"
+                        {% else %} class="table-secondary border-1"
+                        {% endif %}
+                            height="60"
+                            data-bs-toggle="modal" data-bs-target="#infoBookingModal"
+                            id="timetable-id={{ item.id }}"
+                        >
+                            <div style="text-align: center">{{ item.name }}<br>
+                            {{ item.start_time }} - {{ item.end_time }}</div>
+                        </td>
+                        {% else %}
+                            <td {% if day.value >= today %}
+                                class="table-success border-1"
+                                onclick="location.href='ya.ru'"
+                            {% else %} class="table-secondary border-1"
+                            {% endif %} height="60">
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+
+
+            <div class="modal fade" id="infoBookingModal" tabindex="-1" aria-labelledby="infoBookingModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="infoBookingModalLabel">Информация о бронирование</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body " id="modal-output">
+                    <p>Информация о бронирование</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+
+                  </div>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+    <script src="{% static 'js/booking/timetable-booking.js' %}"></script>
+{% endblock %}
