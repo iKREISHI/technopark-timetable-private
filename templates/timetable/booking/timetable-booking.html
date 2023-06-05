@@ -17,37 +17,45 @@
                 </tr>
             </thead>
         <tbody>
-            {% for item in timetable %}
-                <tr>
-                    {% for day in day_of_week %}
-                        {% if item.date == day.value %}
-                        <td {% if day.value >= today %}
-                            class="table-danger border-1"
-                        {% else %} class="table-secondary border-1"
-                        {% endif %}
-                            height="60"
-                            data-bs-toggle="modal" data-bs-target="#infoBookingModal"
-                            id="timetable-id={{ item.id }}"
-                        >
-                            <div style="text-align: center">{{ item.name }}<br>
-                            {{ item.start_time }} - {{ item.end_time }}</div>
+            <tr>
+                {% for day in day_of_week %}
+                        <td align="center">
+                        <table class="table">
+                            {% for item in timetable %}
+                                <tr>
+                                {% if item.date == day.value %}
+                                    <td  {% if day.value >= today %}
+                                        class="table-danger border-0"
+                                    {% else %} class="table-secondary border-0"
+                                    {% endif %}
+                                     height="60"
+                                     data-bs-toggle="modal" data-bs-target="#infoBookingModal"
+                                     id="timetable-id={{ item.id }}"
+                                    >
+                                        <div style="text-align: center">
+                                            {{ item.name }}<br>
+                                            {{ item.start_time }} - {{ item.end_time }}
+                                        </div>
+                                    </td>
+                                {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </table>
                         </td>
-                        {% else %}
-                            <td {% if day.value >= today %}
-                                class="table-success border-1"
-                                onclick="location.href='ya.ru'"
-                            {% else %} class="table-secondary border-1"
-                            {% endif %} height="60">
-                            </td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
+                {% endfor %}
+            </tr>
+            {% for day in day_of_week %}
+                <td>
+                    <button class="btn btn-success bi-plus-square " id="booking-data={{ day.value }};auditorium={{ auditorium_id }}"
+                            data-bs-toggle="modal" data-bs-target="#BookingFormModal">
+                        Добавить
+                    </button>
+                </td>
             {% endfor %}
         </tbody>
         </table>
 
-
-            <div class="modal fade" id="infoBookingModal" tabindex="-1" aria-labelledby="infoBookingModalLabel" aria-hidden="true">
+        <div class="modal fade" id="infoBookingModal" tabindex="-1" aria-labelledby="infoBookingModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -58,12 +66,35 @@
                     <p>Информация о бронирование</p>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыrrть</button>
 
                   </div>
                 </div>
               </div>
         </div>
+
+    <div class="modal fade" id="BookingFormModal" tabindex="-1" aria-labelledby="BookingFormModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="modal-form-booking">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="BookingFormModalLabel">Информация о бронирование</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body " id="modal-output">
+
+                        {% bootstrap_form form %}
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                  </div>
+                    </form>
+                </div>
+              </div>
+        </div>
+
     </div>
 </div>
     <script src="{% static 'js/booking/timetable-booking.js' %}"></script>

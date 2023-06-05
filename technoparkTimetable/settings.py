@@ -34,6 +34,9 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+
+APPEND_SLASH = False
+
 LOGOUT_REDIRECT_URL = "homepage"
 LOGIN_REDIRECT_URL = "homepage"
 LOGIN_URL = 'login'

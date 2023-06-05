@@ -7,6 +7,7 @@ from timetable.models.timetable import TimetableItem
 from timetable.forms.reservation import ReservationAudienceForm
 from datetime import date, timedelta, datetime
 import locale
+from timetable.forms.booking import BookingAuditoriumDate as BookingForm
 
 
 class BookingTimeTableView(View, LoginRequiredMixin):
@@ -43,6 +44,8 @@ class BookingTimeTableView(View, LoginRequiredMixin):
             'day_of_week': days_of_week,
             'timetable': data,
             'today': today,
+            'auditorium_id': Auditorium.objects.filter(id=auditorium_id).first().id,
+            'form': BookingForm,
         }
 
         return render(request, self.template_name, context)
@@ -88,6 +91,8 @@ class BookingTimeTableWeekView(View, LoginRequiredMixin):
             'day_of_week': days_of_week,
             'timetable': data,
             'today': today,
+            'auditorium_id': Auditorium.objects.filter(id=auditorium_id).first().id,
+            'form': BookingForm,
         }
 
         return render(request, self.template_name, context)

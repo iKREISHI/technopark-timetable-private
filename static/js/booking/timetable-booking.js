@@ -1,13 +1,16 @@
+var day_booking = null;
+var aud_id_booking = null;
+
 $('#infoBookingModal').on('show.bs.modal', (event) => {
     let item_id = event.relatedTarget.id.split('=')[1];
     //console.log(id);
     //$('.modal-body').text(item_id);
     getTimetableItemBaseInfo(item_id);
-})
+});
 
 $('#infoBookingModal').on('hide.bs.modal', (event) => {
     $('#modal-output').empty();
-})
+});
 
 
 function getTimetableItemBaseInfo(id) {
@@ -17,6 +20,7 @@ function getTimetableItemBaseInfo(id) {
             success: (response) => {
                   console.log(response);
                   let out = $('#modal-output');
+                  out.empty();
                   out.append('<h2 style="text-align: center">Название: '+ response.name +'</h2>');
                   out.append('<p>Дата: '+ response.date +'</p>');
                   out.append('<p>Время начала: '+ response.start_time +'</p>');
@@ -42,3 +46,111 @@ function getTimetableItemBaseInfo(id) {
       });
 }
 
+$('#BookingFormModal').on('show.bs.modal', (event) => {
+    let day = event.relatedTarget.id.split(';')[0].split('=')[1];
+    let aud_id = event.relatedTarget.id.split(';')[1].split('=')[1];
+    day = parseDate(day);
+    console.log(event.relatedTarget.id);
+    console.log(day, typeof(day), day.getDate(), day.getMonth(), day.getFullYear());
+    console.log(day.getDate() + ':' + day.getMonth() + ':' + day.getFullYear());
+    console.log(aud_id);
+    console.log(getCookie('csrftoken'));
+    day_booking = day;
+    aud_id_booking = aud_id;
+
+});
+
+$('#modal-form-booking').submit((event) => {
+    event.preventDefault();
+    let name = $('#id_name').val();
+    let type = $("#id_type").val();
+    let start_time = $('#id_start_time').val();
+    let end_time  = $('#id_end_time').val();
+    let amount = $('#id_amount_people').val();
+    let info = $('#id_info').val();
+    let date = null;
+    let aud = null;
+    if (day_booking != null) {
+        date = day_booking;
+    }
+    let date_day = date.getDate();
+    let date_month = date.getMonth();
+    let date_year = date.getFullYear();
+    if (aud_id_booking != null) {
+        aud = aud_id_booking;
+    }
+    console.log(name, type, start_time, end_time, amount, info, aud);
+    $.ajax({
+        url: '/api/v0/booking-create/',
+        type: 'POST',
+        data: {
+            'name': name,
+            'type': type,
+            'amount_people': amount,
+            'date': date_day + '-' + date_month + '-' + date_year,
+            'start_time': start_time,
+            'end_time': end_time,
+            'auditorium': aud,
+            'info': info,
+            'organazer': '',
+        },
+        beforeSend: function(xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        },
+        success: (response) => {
+            console.log(response);
+        },
+        error: (error, response) => {
+            console.log(error);
+            console.log(response);
+        }
+    });
+});
+
+$('#BookingFormModal').on('hide.bs.modal', (event) => {
+    $('#modal-output').empty();
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      let cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+
+  function parseDate(dateString) {
+  const parts = dateString.split(" ");
+
+  const months = {
+    "января": 1,
+    "февраля": 2,
+    "марта": 3,
+    "апреля": 4,
+    "мая": 5,
+    "июня": 6,
+    "июля": 7,
+    "августа": 8,
+    "сентября": 9,
+    "октября": 10,
+    "ноября": 11,
+    "декабря": 12
+  };
+
+  const day = parseInt(parts[0], 10);
+  const month = months[parts[1]];
+  const year = parseInt(parts[2], 10);
+
+  const milliseconds = Date.parse(`${year}-${month + 1}-${day}`);
+  const date = new Date(milliseconds);
+
+  return date;
+}
