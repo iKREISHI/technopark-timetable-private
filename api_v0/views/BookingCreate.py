@@ -6,7 +6,6 @@ from rest_framework.permissions import IsAuthenticated
 from timetable.models.timetable import TimetableItem, Type_TimetableItem
 from api_v0.serializers.TimetableItemSerializer import TimetableItemSerializer
 from timetable.forms.booking import BookingAuditoriumDate
-from django.http import JsonResponse
 
 
 class BookingCreateAPIView(generics.CreateAPIView):
@@ -25,8 +24,8 @@ class BookingCreateAPIView(generics.CreateAPIView):
         # Проверка наличия уже существующих бронирований на данное время и дату
         existing_bookings = serializer.Meta.model.objects.filter(
             date=date,
-            start_time=start_time,
-            end_time=end_time
+            start_time__lte=end_time,
+            end_time__gte=start_time
         )
         if existing_bookings.exists():
             raise serializers.ValidationError('Занятое время и дата. Выберите другое время.')

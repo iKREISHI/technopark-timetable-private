@@ -52,7 +52,6 @@ $('#BookingFormModal').on('show.bs.modal', (event) => {
     day = parseDate(day);
     console.log(event.relatedTarget.id);
     console.log(day, typeof(day), day.getDate(), day.getMonth(), day.getFullYear());
-    console.log(day.getDate() + ':' + day.getMonth() + ':' + day.getFullYear());
     console.log(aud_id);
     console.log(getCookie('csrftoken'));
     day_booking = day;
@@ -97,18 +96,25 @@ $('#modal-form-booking').submit((event) => {
         beforeSend: function(xhr, settings) {
             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
         },
-        success: (response) => {
+        success: (response, error) => {
             console.log(response);
+            console.log(error);
+            window.location.reload();
         },
         error: (error, response) => {
             console.log(error);
             console.log(response);
+            console.log(error.responseJSON[0]);
+            $('.alert-danger').text(error.responseJSON[0]).removeClass('d-none');
         }
     });
 });
 
 $('#BookingFormModal').on('hide.bs.modal', (event) => {
-    $('#modal-output').empty();
+    console.log('booking form hide');
+    //$('#modal-output').empty();
+    $('.alert-danger').addClass('d-none');
+    $('#modal-form-booking')[0].reset();
 });
 
 function getCookie(name) {
@@ -127,30 +133,30 @@ function getCookie(name) {
   }
 
 
-  function parseDate(dateString) {
-  const parts = dateString.split(" ");
+function parseDate(dateString) {
+      const parts = dateString.split(" ");
 
-  const months = {
-    "января": 1,
-    "февраля": 2,
-    "марта": 3,
-    "апреля": 4,
-    "мая": 5,
-    "июня": 6,
-    "июля": 7,
-    "августа": 8,
-    "сентября": 9,
-    "октября": 10,
-    "ноября": 11,
-    "декабря": 12
-  };
+      const months = {
+            "января": 1,
+            "февраля": 2,
+            "марта": 3,
+            "апреля": 4,
+            "мая": 5,
+            "июня": 6,
+            "июля": 7,
+            "августа": 8,
+            "сентября": 9,
+            "октября": 10,
+            "ноября": 11,
+            "декабря": 12
+      };
 
-  const day = parseInt(parts[0], 10);
-  const month = months[parts[1]];
-  const year = parseInt(parts[2], 10);
+      const day = parseInt(parts[0], 10);
+      const month = months[parts[1]];
+      const year = parseInt(parts[2], 10);
 
-  const milliseconds = Date.parse(`${year}-${month + 1}-${day}`);
-  const date = new Date(milliseconds);
+      const milliseconds = Date.parse(`${year}-${month + 1}-${day}`);
+      const date = new Date(milliseconds);
 
-  return date;
+      return date;
 }
