@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block content %}
+<h1 style="text-align: center">{{ title }}</h1><hr>
+
+
+<div class="row align-items-center" align="center">
+    <div class="col">
+      <a class="btn btn-success" data-bs-toggle="collapse"
+         href="#current_weeks" role="button" aria-expanded="false"
+         aria-controls="current_weeks"
+      >
+          Расписание на текущий месяу
+      </a>
+    </div>
+    <div class="col">
+      <a class="btn btn-dark" data-bs-toggle="collapse"
+         href="#last_weeks" role="button" aria-expanded="false"
+         aria-controls="last_weeks"
+      >
+          Расписание на прошедшие недели
+      </a>
+    </div>
+    <div class="col">
+      <a class="btn btn-primary" data-bs-toggle="collapse"
+         href="#next_weeks" role="button" aria-expanded="false"
+         aria-controls="next_weeks"
+      >
+          Расписание на следующие недели
+      </a>
+    </div>
+</div>
+<div style="text-align: center">
+    <div class="collapse multi-collapse" id="current_weeks">
+      <div class="card card-body">
+        {% for week in weeks %}
+            {% if week.is_current_week %}
+                <p>
+                    <a href="{% url 'list-auditoriums' week.monday  week.sunday %}">{{ week.monday }} - {{ week.sunday }}</a>
+                </p>
+            {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="collapse multi-collapse" id="last_weeks">
+      <div class="card card-body">
+        {% for week in weeks|dictsortreversed:"start_day" %}
+            {% if week.is_last_week %}
+                <p>
+                    <a href="{% url 'list-auditoriums' week.monday  week.sunday %}">{{ week.monday }} - {{ week.sunday }}</a>
+                </p>
+            {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="collapse multi-collapse" id="next_weeks">
+      <div class="card card-body">
+        {% for week in weeks|dictsort:"start_day" %}
+            {% if week.is_next_week %}
+                <p>
+                    <a href="{% url 'list-auditoriums' week.monday  week.sunday %}">{{ week.monday }} - {{ week.sunday }}</a>
+                </p>
+            {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+</div>
+</div>
+
+{% endblock %}

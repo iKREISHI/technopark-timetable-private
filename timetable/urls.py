@@ -13,6 +13,8 @@ from timetable.views.booking.booking import (
     BookingTimeTableView,
     BookingTimeTableWeekView
 )
+from timetable.views.list_week import ListWeekView
+from timetable.views.list_auditorium import ListAuditoriumView
 
 urlpatterns = [
     path('add-reservation/', AddTimeTableReservation.as_view(), name='add-user-reservation'),
@@ -37,4 +39,6 @@ urlpatterns = [
         BookingTimeTableWeekView.as_view(),
         name='booking-timetable-week'
     ),
+    path('list-week', ListWeekView.as_view(), name='list-week'),
+    path('list-auditoriums/<str:monday>-<str:sunday>', ListAuditoriumView.as_view(), name='list-auditoriums'),
 ]

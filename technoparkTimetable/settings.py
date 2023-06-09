@@ -59,8 +59,10 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'users',
-    'timetable',
+    'timetable.apps.TimetableConfig',
+    #'timetable',
     'api_v0',
+
 ]
 
 MIDDLEWARE = [

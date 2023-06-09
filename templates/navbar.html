@@ -9,6 +9,9 @@
         <li class="nav-item" hidden="hidden">
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
+      <li class="nav-item">
+          <a class="nav-link active" href="{% url 'list-week' %}">По неделям</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link active" href="{% url 'add-user-reservation' %}">Забронировать аудиторию</a>
         </li>
@@ -20,9 +23,7 @@
             <a class="nav-link active" href="{% url 'list-admin-confirm-user' %}">Список новых пользователей</a>
           </li>
       {% endif %}
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'list-user-reservation' %}">История бронирования</a>
-        </li>
+
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             {% if user.is_authenticated %}
@@ -37,7 +38,8 @@
               <li><a class="dropdown-item" href="/admin">Admin</a></li>
           {% endif %}
             <li><a class="dropdown-item" href="#">Профиль</a></li>
-            <li><a class="dropdown-item" href="#">Забронировать аудиторию</a></li>
+            <!--<li><a class="dropdown-item" href="#">Забронировать аудиторию</a></li>-->
+            <li><a class="dropdown-item" href="{% url 'list-user-reservation' %}">История бронирования</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{% url "logout" %}">Выйти</a></li>
           </ul>

@@ -50,7 +50,7 @@
                     </td>
                     <td>
                         <a href="{% url 'update-user-reservation' item.pk  %}" class=" bi bi bi-pen text-success"></a>
-                        <a href="{% url 'confirm-new-user' item.pk 'REJECTED' %}" class="bi bi-x-square-fill text-danger"></a>
+                        <a href="{% url 'approve-reservation' item.pk 'REJECTED' %}" class="bi bi-x-square-fill text-danger"></a>
                     </td>
                 </tr>
             {% endfor %}

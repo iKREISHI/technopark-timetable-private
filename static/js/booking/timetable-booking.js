@@ -117,7 +117,7 @@ $('#BookingFormModal').on('hide.bs.modal', (event) => {
     $('#modal-form-booking')[0].reset();
 });
 
-function getCookie(name) {
+let getCookie = (name) => {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
       let cookies = document.cookie.split(';');
@@ -133,7 +133,7 @@ function getCookie(name) {
   }
 
 
-function parseDate(dateString) {
+let parseDate = (dateString)=> {
       const parts = dateString.split(" ");
 
       const months = {
