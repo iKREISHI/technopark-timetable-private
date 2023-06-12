@@ -8,8 +8,7 @@ from openpyxl.styles import Font, Border, Side
 from users.models.university import Auditorium
 from timetable.models.timetable import TimetableItem
 from datetime import datetime, timedelta
-import pandas as pd
-import io
+
 
 '''
 header = [

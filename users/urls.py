@@ -5,6 +5,7 @@ from users.views.University.building import AddUniversityBuilding, ViewUniversit
 from users.views.University.auditorium import AddAuditorium, AddAuditoriumType, ViewAuditorium, ViewAuditoriumType
 from users.views.user_confirmation import UserConfirmation, ConfirmNewUser
 from users.views.waiting_user_confirmation import WaitingUserConfirm
+from users.views.profile import ProfileView
 
 urlpatterns = [
     path('', include('django.contrib.auth.urls')),
@@ -20,4 +21,5 @@ urlpatterns = [
     path('list-admin-confirm-user/', UserConfirmation.as_view(), name='list-admin-confirm-user'),
     path('confirm-new-user/<int:user_id>/<str:str>', ConfirmNewUser.as_view(), name='confirm-new-user'),
     path('waiting-user-confirm/', WaitingUserConfirm.as_view(), name='waiting-user-confirm'),
+    path('profile', ProfileView.as_view(), name="user-profile"),
 ]

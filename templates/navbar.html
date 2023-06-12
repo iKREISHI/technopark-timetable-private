@@ -35,9 +35,9 @@
         {% if user.is_authenticated %}
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
           {% if user.is_superuser %}
-              <li><a class="dropdown-item" href="/admin">Admin</a></li>
+              <li><a class="dropdown-item" href="/admin/">Admin</a></li>
           {% endif %}
-            <li><a class="dropdown-item" href="#">Профиль</a></li>
+            <li><a class="dropdown-item" href="{% url 'user-profile' %}">Профиль</a></li>
             <!--<li><a class="dropdown-item" href="#">Забронировать аудиторию</a></li>-->
             <li><a class="dropdown-item" href="{% url 'list-user-reservation' %}">История бронирования</a></li>
             <li><hr class="dropdown-divider"></li>
