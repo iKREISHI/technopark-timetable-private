@@ -8,7 +8,7 @@ from datetime import date, datetime, timedelta
 from timetable.models.week import Week
 
 
-class ListAuditoriumView(View):
+class ListAuditoriumView(LoginRequiredMixin, View):
     template_name = 'timetable/Week/list-auditorium.html'
 
     def get(self, request, monday, sunday):

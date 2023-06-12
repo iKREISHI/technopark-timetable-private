@@ -15,6 +15,7 @@ from timetable.views.booking.booking import (
 )
 from timetable.views.list_week import ListWeekView
 from timetable.views.list_auditorium import ListAuditoriumView
+from timetable.views.export.xlsx import ExportXlsxView
 
 urlpatterns = [
     path('add-reservation/', AddTimeTableReservation.as_view(), name='add-user-reservation'),
@@ -32,7 +33,7 @@ urlpatterns = [
     # path('current-week-json/', TimeTableCurrentWeekJSONView.as_view(), name='current-week-json'),
     path('item/<int:pk>/update/', TimeTableItemUpdateView.as_view(), name='timetableitem-update'),
     path('item/<int:pk>/delete', TimeTableItemDeleteView.as_view(), name='timetableitem-delete'),
-    path('week-<str:monday>-<str:sunday>', TimetableWeekView.as_view(), name='timetable-week'),
+    path('week/<str:monday>-<str:sunday>', TimetableWeekView.as_view(), name='timetable-week'),
     path('booking-timetable/<int:auditorium_id>', BookingTimeTableView.as_view(), name='booking-timetable'),
     path(
         'booking-timetable/<int:auditorium_id>/<str:monday>-<str:sunday>',
@@ -41,4 +42,5 @@ urlpatterns = [
     ),
     path('list-week', ListWeekView.as_view(), name='list-week'),
     path('list-auditoriums/<str:monday>-<str:sunday>', ListAuditoriumView.as_view(), name='list-auditoriums'),
+    path('export-xlsx/<str:monday>-<str:sunday>', ExportXlsxView.as_view(), name='export-xlsx'),
 ]
