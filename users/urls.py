@@ -8,24 +8,6 @@ from users.views.user_confirmation import UserConfirmation, ConfirmNewUser
 from users.views.waiting_user_confirmation import WaitingUserConfirm
 from users.views.profile import ProfileView
 
-'''
-    path("password_reset/", views.PasswordResetView.as_view(), name="password_reset"),
-    path(
-        "password_reset/done/",
-        views.PasswordResetDoneView.as_view(),
-        name="password_reset_done",
-    ),
-    path(
-        "reset/<uidb64>/<token>/",
-        views.PasswordResetConfirmView.as_view(),
-        name="password_reset_confirm",
-    ),
-    path(
-        "reset/done/",
-        views.PasswordResetCompleteView.as_view(),
-        name="password_reset_complete",
-    ),
-'''
 
 urlpatterns = [
     path("login/", views.LoginView.as_view(), name="login"),
@@ -45,7 +27,22 @@ urlpatterns = [
         ),
         name="password_changed",
     ),
-
+    path("password_reset/", views.PasswordResetView.as_view(), name="password_reset"),
+    path(
+        "password_reset/done/",
+        views.PasswordResetDoneView.as_view(),
+        name="password_reset_done",
+    ),
+    path(
+        "reset/<uidb64>/<token>/",
+        views.PasswordResetConfirmView.as_view(),
+        name="password_reset_confirm",
+    ),
+    path(
+        "reset/done/",
+        views.PasswordResetCompleteView.as_view(),
+        name="password_reset_complete",
+    ),
     path('register/', Register.as_view(), name='register'),
     path('add-univerisy-unit/', AddUniversityUnit.as_view(), name='add-university-unit'),
     path('view-university-unit/', ViewUniversityUnit.as_view(), name='view-university-unit'),
