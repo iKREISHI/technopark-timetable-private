@@ -1,4 +1,5 @@
 from django.urls import include, path
+from django.contrib.auth import views
 from users.views.registration import Register
 from users.views.University.university_unit import AddUniversityUnit, ViewUniversityUnit
 from users.views.University.building import AddUniversityBuilding, ViewUniversityBuilding
@@ -7,8 +8,44 @@ from users.views.user_confirmation import UserConfirmation, ConfirmNewUser
 from users.views.waiting_user_confirmation import WaitingUserConfirm
 from users.views.profile import ProfileView
 
+'''
+    path("password_reset/", views.PasswordResetView.as_view(), name="password_reset"),
+    path(
+        "password_reset/done/",
+        views.PasswordResetDoneView.as_view(),
+        name="password_reset_done",
+    ),
+    path(
+        "reset/<uidb64>/<token>/",
+        views.PasswordResetConfirmView.as_view(),
+        name="password_reset_confirm",
+    ),
+    path(
+        "reset/done/",
+        views.PasswordResetCompleteView.as_view(),
+        name="password_reset_complete",
+    ),
+'''
+
 urlpatterns = [
-    path('', include('django.contrib.auth.urls')),
+    path("login/", views.LoginView.as_view(), name="login"),
+    path("logout/", views.LogoutView.as_view(), name="logout"),
+    path(
+        "password_change/",
+        views.PasswordChangeView.as_view(
+            template_name='user/change_password.html',
+            success_url='/users/password_changed/'
+        ),
+        name="password_change"
+    ),
+    path(
+        "password_changed/",
+        views.PasswordChangeDoneView.as_view(
+            template_name='user/password_changed.html',
+        ),
+        name="password_changed",
+    ),
+
     path('register/', Register.as_view(), name='register'),
     path('add-univerisy-unit/', AddUniversityUnit.as_view(), name='add-university-unit'),
     path('view-university-unit/', ViewUniversityUnit.as_view(), name='view-university-unit'),
