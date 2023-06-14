@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block content %}
+
+<h1 style="text-align: center">{{ title }}</h1><hr>
+    <button class="btn" onclick="convertToPDF('export2pdf', '{{ title }}')">Загрузить</button>
+    <div class="row justify-content-center" id="export2pdf">
+        <div>
+            <table  class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">
+                            День недели
+                        </th>
+
+
+                        {% for auditorium in auditoriums %}
+                            <th scope="col">
+                                {{ auditorium.name }}<br>
+                                {{ auditorium.capacity }}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+            <tbody>
+                {% for day in day_of_week %}
+                    <tr>
+                        <td>
+                            {{ day.date }} {{ day.month }}<br>
+                            {{ day.weekday }}
+                        </td>
+                        {% for auditorium in auditoriums %}
+                            <td>
+                                <table class="table">
+                                {% for item in auditorium.timetableitem_set.all|dictsort:"start_time"|dictsort:"date" %}
+                                    {% if item and item.date == day.value  and item.status == 'APPROVED' %}
+                                        <tr class="text-center">
+                                            <td>
+
+                                                {{ item.name }}<br>
+                                                {{ item.start_time }} - {{ item.end_time }}
+
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </table>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/jspdf/jspdf.umd.min.js' %}"></script>
+    <script src="{% static 'js/html2canvas/html2canvas.min.js' %}"></script>
+    <script src="{% static 'js/schedule/export2pdf.js' %}"></script>
+{% endblock %}
