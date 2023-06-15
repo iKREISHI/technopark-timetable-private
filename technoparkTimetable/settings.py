@@ -44,6 +44,11 @@ LOGIN_URL = 'login'
 PHONENUMBER_DEFAULT_REGION = 'RU'
 PHONENUMBER_DEFAULT_FORMAT='INTERNATIONAL'
 
+BACKUP_DIR = os.path.join(BASE_DIR, 'backup')
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': BACKUP_DIR}
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -57,6 +62,8 @@ INSTALLED_APPS = [
     'captcha',
     'phonenumber_field',
     'rest_framework',
+    'dbbackup',
+    'django_cron',
 
     'users',
     'timetable.apps.TimetableConfig',

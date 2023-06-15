@@ -4,9 +4,8 @@
 
 {% block content %}
 
-<h1 style="text-align: center">{{ title }}</h1><hr>
-    <button class="btn" onclick="convertToPDF('export2pdf', '{{ title }}')">Загрузить</button>
     <div class="row justify-content-center" id="export2pdf">
+        <h2 class="text-center">{{ title }}<button class="btn bi bi-download" onclick="convertToPDF('export2pdf', '{{ title }}')"></button></h2>
         <div>
             <table  class="table table-bordered">
                 <thead>
@@ -14,8 +13,6 @@
                         <th class="text-center">
                             День недели
                         </th>
-
-
                         {% for auditorium in auditoriums %}
                             <th scope="col">
                                 {{ auditorium.name }}<br>

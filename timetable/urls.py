@@ -15,7 +15,6 @@ from timetable.views.booking.booking import (
 )
 from timetable.views.list_week import ListWeekView
 from timetable.views.list_auditorium import ListAuditoriumView
-from timetable.views.export.xlsx import ExportXlsxView
 from timetable.views.timtable import ScheduleView
 
 urlpatterns = [
@@ -43,6 +42,5 @@ urlpatterns = [
     ),
     path('list-week', ListWeekView.as_view(), name='list-week'),
     path('list-auditoriums/<str:monday>-<str:sunday>', ListAuditoriumView.as_view(), name='list-auditoriums'),
-    path('export-xlsx/<str:monday>-<str:sunday>', ExportXlsxView.as_view(), name='export-xlsx'),
     path('schedule/<str:monday>-<str:sunday>', ScheduleView.as_view(), name='schedule'),
 ]
