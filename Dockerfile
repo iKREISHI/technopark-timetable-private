@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN apk update && apk add postgresql-dev gcc python3-dev py3-setuptools musl-dev \
+RUN apk update && apk add postgresql-dev postgresql-client gcc python3-dev py3-setuptools musl-dev \
     jpeg-dev zlib-dev libjpeg py3-pillow py3-wheel \
     tiff-dev openjpeg-dev freetype-dev lcms2-dev \
     libwebp-dev tcl-dev tk-dev harfbuzz-dev fribidi-dev libimagequant-dev \

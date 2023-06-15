@@ -5,6 +5,8 @@ build:
 	docker-compose exec web python manage.py migrate
 	docker-compose exec web python manage.py loaddata users_data.json
 	docker-compose exec web python manage.py loaddata timetable_data.json
+	docker-compose exec web python manage.py runcrons
+	docker-compose exec web python manage.py dbbackup
 
 stop:
 	docker-compose stop

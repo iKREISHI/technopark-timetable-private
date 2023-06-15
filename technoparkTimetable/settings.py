@@ -72,6 +72,11 @@ INSTALLED_APPS = [
 
 ]
 
+CRON_CLASSES = [
+    'timetable.cron.BackupJob',
+]
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
