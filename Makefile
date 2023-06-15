@@ -2,6 +2,7 @@
 build:
 	docker build .
 	docker-compose up -d --build
+	docker-compose exec web python manage.py makemigrations
 	docker-compose exec web python manage.py migrate
 	docker-compose exec web python manage.py loaddata users_data.json
 	docker-compose exec web python manage.py loaddata timetable_data.json
@@ -25,6 +26,9 @@ rebuild-web:
 
 rebuild-compose:
 	docker-compose up -d --build
+	docker-compose exec web python manage.py makemigrations
 	docker-compose exec web python manage.py migrate
 	docker-compose exec web python manage.py loaddata users_data.json
 	docker-compose exec web python manage.py loaddata timetable_data.json
+	docker-compose exec web python manage.py runcrons
+	docker-compose exec web python manage.py dbbackup

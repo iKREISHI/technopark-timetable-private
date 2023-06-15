@@ -157,6 +157,8 @@ AUTH_USER_MODEL = "users.User"
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
+DEFAULT_CHARSET = 'utf-8'
+
 LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'Asia/Yekaterinburg'
@@ -165,6 +167,13 @@ USE_I18N = True
 
 USE_TZ = True
 
+from django.conf.locale.ru import formats as ru_formats
+LANGUAGES = [
+    ('ru', 'Russian'),
+]
+FORMAT_MODULE_PATH = [
+    'django.conf.locale.ru.formats',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
