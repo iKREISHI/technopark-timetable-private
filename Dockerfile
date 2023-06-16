@@ -15,12 +15,14 @@ RUN echo 'LANG=ru_RU.UTF-8' >> /etc/default/locale
 RUN ln -sf /usr/share/zoneinfo/Asia/Yekaterinburg /etc/localtime
 RUN echo "Asia/Yekaterinburg" > /etc/timezone
 
-RUN apt-get install -y postgresql-client vim mc
+RUN apt-get install -y postgresql-client cron vim mc
 
 RUN pip install --upgrade pip
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
+RUN chmod +x /usr/src/app/backup_script.sh
+RUN echo "0 0 * * * /usr/src/app/backup_script.sh" >> /etc/crontab
 # RUN cp ./config/DataBase.py ./config/DataBaseold.py  mv -f ./config/dockerDB.py ./config/DataBase.py
 
 

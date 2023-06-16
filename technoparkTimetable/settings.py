@@ -62,8 +62,6 @@ INSTALLED_APPS = [
     'captcha',
     'phonenumber_field',
     'rest_framework',
-    'dbbackup',
-    'django_cron',
 
     'users',
     'timetable.apps.TimetableConfig',
@@ -71,11 +69,6 @@ INSTALLED_APPS = [
     'api_v0',
 
 ]
-
-CRON_CLASSES = [
-    'timetable.cron.BackupJob',
-]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
