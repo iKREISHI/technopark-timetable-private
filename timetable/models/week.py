@@ -17,7 +17,7 @@ class Week(models.Model):
 
         weeks = []
         start_date = date(current_year, 1, 1)
-        while start_date.weekday() != 1:  # Находим первый понедельник
+        while start_date.weekday() != 0:  # Находим первый понедельник
             start_date += timedelta(days=1)
 
         while start_date.year == current_year:
