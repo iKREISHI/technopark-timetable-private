@@ -16,7 +16,7 @@ stop:
 
 start:
 	docker-compose up -d
-	docker-compose exec web cron -f
+	#docker-compose exec web cron -f
 
 restart:
 	docker-compose restart
