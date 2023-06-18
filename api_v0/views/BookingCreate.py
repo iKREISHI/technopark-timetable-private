@@ -25,11 +25,15 @@ class BookingCreateAPIView(generics.CreateAPIView):
         end_time = serializer.validated_data['end_time']
         date = serializer.validated_data['date']
         auditorium = self.request.data.get('auditorium')
+        amount = serializer.validated_data['amount_people']
 
         if date < datetime.date.today():
             raise serializers.ValidationError(
                 f'Невозможно забронировать аудиторию на прошедшую дату'
             )
+        if amount > Auditorium.objects.filter(id=auditorium).first().capacity:
+            raise serializers.ValidationError(
+                f'Аудитория {Auditorium.objects.filter(id=auditorium).first()} не может вместить {amount} человек')
 
         # Проверка наличия уже существующих бронирований на данное время и дату
         existing_bookings = serializer.Meta.model.objects.filter(

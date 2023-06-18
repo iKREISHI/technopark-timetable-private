@@ -14,9 +14,9 @@
                             День недели
                         </th>
                         {% for auditorium in auditoriums %}
-                            <th scope="col">
-                                {{ auditorium.name }}<br>
-                                {{ auditorium.capacity }}
+                            <th scope="col" class="text-center">
+                                {{ auditorium.name }}
+                                ({{ auditorium.capacity }} человек)
                             </th>
                         {% endfor %}
                     </tr>
@@ -34,7 +34,9 @@
                                 {% for item in auditorium.timetableitem_set.all|dictsort:"start_time"|dictsort:"date" %}
                                     {% if item and item.date == day.value  and item.status == 'APPROVED' %}
                                         <tr class="text-center">
-                                            <td>
+                                            <td id="timetable-id={{ item.id }}"
+                                                data-bs-toggle="modal" data-bs-target="#infoBookingModal"
+                                            >
 
                                                 {{ item.name }}<br>
                                                 {{ item.start_time }} - {{ item.end_time }}
@@ -52,7 +54,25 @@
             </table>
         </div>
     </div>
+    <div class="modal fade" id="infoBookingModal" tabindex="-1" aria-labelledby="infoBookingModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="infoBookingModalLabel">Информация о бронирование</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body " id="modal-output">
+                    <p>Информация о бронирование</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+
+                  </div>
+                </div>
+              </div>
+        </div>
     <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/schedule/modalscript.js' %}"></script>
     <script src="{% static 'js/jspdf/jspdf.umd.min.js' %}"></script>
     <script src="{% static 'js/html2canvas/html2canvas.min.js' %}"></script>
     <script src="{% static 'js/schedule/export2pdf.js' %}"></script>

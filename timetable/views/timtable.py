@@ -35,7 +35,47 @@ class ScheduleView(View):
             current_day += timedelta(days=1)
 
         context = {
-            'title': f'Расписание на {monday} - {sunday}',
+            'title':
+                f'Расписание на '
+                f'{start_week .strftime("%d")} {start_week .strftime("%B").capitalize()} '
+                f'- {end_week .strftime("%d")} {end_week .strftime("%B").capitalize()} {end_week .strftime("%y")} года',
+            'day_of_week': days_of_week,
+            'auditoriums': auditoriums,
+            'timetable_items': data,
+        }
+
+        return render(request, self.template_name, context)
+
+
+class CurrentScheduleView(View):
+    template_name = 'timetable/schedule/schedule.html'
+
+    def get(self, request):
+        today = date.today()
+        start_week = today - timedelta(days=today.weekday())
+        end_week = start_week + timedelta(days=6)
+        data = TimetableItem.objects.all().filter(status='APPROVED').order_by('date', 'start_time', 'end_time')
+        auditoriums = Auditorium.objects.all()
+        locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
+        days_of_week = []
+        current_day = start_week
+        # data = []
+
+        while current_day <= end_week:
+            day_info = {
+                'value': current_day,
+                'date': current_day.strftime("%d"),
+                'month': current_day.strftime("%B").capitalize(),
+                'weekday': current_day.strftime("%A").capitalize()
+            }
+            days_of_week.append(day_info)
+            current_day += timedelta(days=1)
+
+        context = {
+            'title':
+                f'Расписание на '
+                f'{start_week .strftime("%d")} {start_week .strftime("%B").capitalize()} '
+                f'- {end_week .strftime("%d")} {end_week .strftime("%B").capitalize()} {end_week .strftime("%y")} года',
             'day_of_week': days_of_week,
             'auditoriums': auditoriums,
             'timetable_items': data,

@@ -87,7 +87,10 @@ class BookingTimeTableWeekView(View, LoginRequiredMixin):
         data = self.model.objects.filter(auditorium=auditorium_id,  status='APPROVED').all().order_by('date', 'start_time', 'end_time')
         aud_name = Auditorium.objects.filter(id=auditorium_id,).first().name
         context = {
-            'title': f'Забронировать аудиторию {aud_name} на {monday} - {sunday}',
+            'title':
+                f'Забронировать аудиторию {aud_name} на '
+                f'{start_week .strftime("%d")} {start_week .strftime("%B").capitalize()} '
+                f'- {end_week .strftime("%d")} {end_week .strftime("%B").capitalize()} {end_week .strftime("%y")} года',
             'day_of_week': days_of_week,
             'timetable': data,
             'today': today,
