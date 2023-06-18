@@ -23,7 +23,7 @@ RUN pip install -r requirements.txt
 COPY . .
 RUN chmod +x /usr/src/app/backup_script.sh
 #RUN echo "0 0 * * * /usr/src/app/backup_script.sh" >> /etc/crontab
-RUN crontab -l | { cat; echo "0 0 * * * /usr/src/app/backup_script.sh"; } | crontab
+RUN crontab -l | { cat; echo "0 0 * * * /usr/src/app/backup_script.sh"; } | crontab -
 CMD cron -f
 # RUN cp ./config/DataBase.py ./config/DataBaseold.py  mv -f ./config/dockerDB.py ./config/DataBase.py
 
