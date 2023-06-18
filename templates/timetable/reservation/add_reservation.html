@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load bootstrap5 %}
 
 {% block content %}
 <h1 class="text-center">{{ title }}</h1><hr>
 
-<form action="{% url url_form  %}" method="post">
+<form action="{% url url_form  %}" method="post" id="add-reservation-form">
+    <div class="alert alert-danger d-none" role="alert"></div>
     {% bootstrap_form form %}
     {% csrf_token %}
 
 <button type="submit" class="btn btn-success">Отправить</button>
 </form>
-
+<script src="{% static 'js/booking/add-reservation.js' %}"></script>
 {% endblock %}

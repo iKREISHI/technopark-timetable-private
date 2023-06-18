@@ -3,7 +3,7 @@ from api_v0.views.timetable_item_baseinfo import (
     TimetableItemDetailView
 )
 from api_v0.views.BookingWeek import BookingCurrentWeekAPIView
-from api_v0.views.BookingCreate import BookingCreateAPIView
+from api_v0.views.BookingCreate import BookingCreateAPIView, ReservationCreateAPIView
 
 
 urlpatterns = [
@@ -18,5 +18,9 @@ urlpatterns = [
     path(
         'booking-create/', BookingCreateAPIView.as_view(),
         name='booking-create'
+    ),
+    path(
+        'add-reservation/', ReservationCreateAPIView.as_view(),
+        name='add-reservation-api'
     ),
 ]

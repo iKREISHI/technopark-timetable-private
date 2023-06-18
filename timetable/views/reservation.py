@@ -8,7 +8,7 @@ from timetable.forms.reservation import ReservationAudienceForm
 
 
 class AddTimeTableReservation(LoginRequiredMixin, View):
-    template_name = 'university/add_item.html'
+    template_name = 'timetable/reservation/add_reservation.html'
     model = ...
     form = ReservationAudienceForm
     context = {

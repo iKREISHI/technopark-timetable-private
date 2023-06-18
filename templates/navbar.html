@@ -9,11 +9,11 @@
         <li class="nav-item" hidden="hidden">
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
-      <li class="nav-item">
-          <a class="nav-link active" href="{% url 'list-week' %}">По неделям</a>
-        </li>
+{#        <li class="nav-item">#}
+{#          <a class="nav-link active" href="{% url 'list-week' %}">По неделям</a>#}
+{#        </li>#}
         <li class="nav-item">
-          <a class="nav-link active" href="{% url 'add-user-reservation' %}">Забронировать аудиторию</a>
+          <a class="nav-link active" href="{% url 'list-week' %}">Забронировать аудиторию</a>
         </li>
       {% if user.is_superuser %}
         <li class="nav-item">

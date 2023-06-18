@@ -53,7 +53,6 @@ $('#BookingFormModal').on('show.bs.modal', (event) => {
     console.log(event.relatedTarget.id);
     console.log(day, typeof(day), day.getDate(), day.getMonth(), day.getFullYear());
     console.log(aud_id);
-    console.log(getCookie('csrftoken'));
     day_booking = day;
     aud_id_booking = aud_id;
 
@@ -130,7 +129,7 @@ let getCookie = (name) => {
       }
     }
     return cookieValue;
-  }
+}
 
 
 let parseDate = (dateString)=> {

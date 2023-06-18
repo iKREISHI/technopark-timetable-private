@@ -35,3 +35,12 @@ class TimetableItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = TimetableItem
         fields = '__all__'
+
+
+class TimetableReservationSerializer(serializers.ModelSerializer):
+    auditorium = AuditoriumSerializer(many=True)
+    date = serializers.DateField(format="%d-%m-%Y", input_formats=['%d-%m-%Y', 'iso-8601'])
+
+    class Meta:
+        model = TimetableItem
+        fields = '__all__'
