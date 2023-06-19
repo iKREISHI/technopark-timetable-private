@@ -1,0 +1,3 @@
+# Запуск команды резервного копирования базы данных Django
+0 0 * * * /usr/bin/python /usr/src/app/manage.py dumpdata > /usr/src/app/backup/db_backup_$(date +%Y-%m-%d).json 2>> /usr/src/app/backup/backup_log_$(date +%Y-%m-%d).log
+

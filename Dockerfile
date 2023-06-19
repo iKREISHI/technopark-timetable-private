@@ -15,7 +15,7 @@ RUN echo 'LANG=ru_RU.UTF-8' >> /etc/default/locale
 RUN ln -sf /usr/share/zoneinfo/Asia/Yekaterinburg /etc/localtime
 RUN echo "Asia/Yekaterinburg" > /etc/timezone
 
-RUN apt-get install -y postgresql-client cron vim mc
+RUN apt-get install -y postgresql-client cron vim mc procps
 
 RUN pip install --upgrade pip
 COPY ./requirements.txt .
@@ -24,7 +24,9 @@ COPY . .
 RUN chmod +x /usr/src/app/backup_script.sh
 
 #RUN echo "0 0 * * * /usr/src/app/backup_script.sh" >> /etc/crontab
-RUN crontab -l | { cat; echo "0 0 * * * /usr/src/app/backup_script.sh > /proc/1/fd/1 2>/proc/1/fd/2"; } | crontab -
+# RUN crontab -l | { cat; echo "0 0 * * * /usr/src/app/backup_script.sh > /proc/1/fd/1 2>/proc/1/fd/2"; } | crontab -
+COPY cron_backup /etc/cron.d/cronfile
+RUN chmod 0644 /etc/cron.d/cronfile && crontab /etc/cron.d/cronfile
 
-
-CMD ["cron","-f", "-L", "2"]
+# CMD ["cron","-f", "-L", "2"]
+CMD cron -f
