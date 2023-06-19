@@ -22,12 +22,9 @@ COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
 RUN chmod +x /usr/src/app/backup_script.sh
-#RUN echo "0 0 * * * /usr/src/app/backup_script.sh" >> /etc/crontab
-#RUN crontab -l | { cat; echo "0 0 * * * /usr/src/app/backup_script.sh"; } | crontab -
-COPY backup_script.sh /etc/cron.d/backup_script
-RUN chmod 0644 /etc/cron.d/backup_script
-RUN crontab /etc/cron.d/backup_script
-RUN touch /var/log/cron.log
-CMD cron && tail -f /var/log/cron.log
 
-CMD cron -f
+#RUN echo "0 0 * * * /usr/src/app/backup_script.sh" >> /etc/crontab
+RUN crontab -l | { cat; echo "0 0 * * * /usr/src/app/backup_script.sh > /proc/1/fd/1 2>/proc/1/fd/2"; } | crontab -
+
+
+CMD ["cron","-f", "-L", "2"]
