@@ -55,6 +55,7 @@ $('#BookingFormModal').on('show.bs.modal', (event) => {
     console.log(aud_id);
     day_booking = day;
     aud_id_booking = aud_id;
+    $('#modal-form-booking')[0].reset();
 
 });
 
@@ -98,7 +99,9 @@ $('#modal-form-booking').submit((event) => {
         success: (response, error) => {
             console.log(response);
             console.log(error);
-            window.location.reload();
+            $('#modal-form-booking')[0].reset();
+            console.log('Success! booking form hide');
+            location.reload();
         },
         error: (error, response) => {
             console.log(error);

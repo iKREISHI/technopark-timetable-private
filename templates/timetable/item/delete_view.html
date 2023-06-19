@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h1>Удалить элемент</h1>
+
+
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Удалить</button>
+      {% if user.is_superuser %}
+         <a href="{% url 'list-admin-reservation' %}" class="btn btn-secondary">Назад</a>
+          {% else %}
+           <a href="{% url 'list-user-reservation' %}" class="btn btn-secondary">Назад</a>
+      {% endif %}
+    </form>
+  </div>
+{% endblock %}

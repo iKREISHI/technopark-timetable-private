@@ -41,6 +41,7 @@ class BookingCreateAPIView(generics.CreateAPIView):
             auditorium=auditorium,
             start_time__lte=end_time,
             end_time__gte=start_time,
+            status='APPROVED',
         )
         if existing_bookings.exists():
             raise serializers.ValidationError(f'Аудитория {Auditorium.objects.filter(id=auditorium).first()} занята на выбранное время и дата. Выберите другое время.')

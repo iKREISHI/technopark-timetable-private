@@ -7,5 +7,5 @@ cd /usr/src/app
 # source /path/to/your/virtualenv/bin/activate
 
 # Запуск команды резервного копирования базы данных Django
-python manage.py dumpdata > /usr/src/app/backup/db_backup_$(date +%Y-%m-%d).json
+python manage.py dumpdata > /usr/src/app/backup/db_backup_$(date +%Y-%m-%d).json 2>> /usr/src/app/backup/backup_log_$(date +%Y-%m-%d).log
 

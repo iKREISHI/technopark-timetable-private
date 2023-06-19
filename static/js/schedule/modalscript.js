@@ -15,10 +15,11 @@ function getTimetableItemBaseInfo(id) {
             url: '/api/v0/timetable-item-info/' + id + '/',
             type: 'GET',
             success: (response) => {
-                  console.log(response);
+                console.log(response);
                   let out = $('#modal-output');
                   out.empty();
                   out.append('<h2 style="text-align: center">Название: '+ response.name +'</h2>');
+                  out.append('<p>Тип: '+ response.type.name +'</p>');
                   out.append('<p>Дата: '+ response.date +'</p>');
                   out.append('<p>Время начала: '+ response.start_time +'</p>');
                   out.append('<p>Время окончания: '+ response.end_time +'</p>');
@@ -34,6 +35,7 @@ function getTimetableItemBaseInfo(id) {
                       + response.organazer.patronymic
                       +'</p>');
                   }
+                  out.append('<p>Дополнительная информация: '+ response.info +'</p>');
             },
             error: (textStatus, error) => {
                 console.log(textStatus)

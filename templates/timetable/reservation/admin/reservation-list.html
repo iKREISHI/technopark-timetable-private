@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load bootstrap5 %}
 
 {% block content %}
@@ -18,7 +19,7 @@
         </thead>
         <tbody>
             {% for item in data %}
-                <tr>
+                <tr id="timetable-id={{ item.id }}">
                     <th scope="row">
                         {{ item.name }}
                     </th>
@@ -43,5 +44,4 @@
             {% endfor %}
         </tbody>
     </table>
-
 {% endblock %}
