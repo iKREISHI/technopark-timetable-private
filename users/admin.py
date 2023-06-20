@@ -7,11 +7,21 @@ from users.models.university import University_Unit, University_Building, Audito
 User = get_user_model()
 
 
-@admin.register(User)
-class UserAdmin(UserAdmin):
-    pass
+# @admin.register(User)
+# class UserAdmin(UserAdmin):
+#     pass
 
 
+class CustomUserAdmin(UserAdmin):
+    list_display = ('username', 'first_name', 'last_name', 'patronymic', 'university_unit', 'phone_number', 'is_verificated', 'info')
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'patronymic', 'university_unit', 'phone_number', 'is_verificated', 'info')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+    )
+
+admin.site.register(User, CustomUserAdmin)
 admin.site.register(University_Unit)
 admin.site.register(University_Building)
 admin.site.register(Auditorium_Type)
