@@ -21,6 +21,19 @@ class CustomUserAdmin(UserAdmin):
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
 
+
+University_Unit._meta.verbose_name = 'Подразделение универститета'
+University_Unit._meta.verbose_name_plural = 'Подразделения университета'
+
+University_Building._meta.verbose_name = 'Корпус Университета'
+University_Building._meta.verbose_name_plural = 'Корпуса Университета'
+
+Auditorium_Type._meta.verbose_name = 'Тип аудитории'
+Auditorium_Type._meta.verbose_name_plural = 'Типы аудиторий'
+
+Auditorium._meta.verbose_name = 'Аудитория'
+Auditorium._meta.verbose_name_plural = 'Аудитории'
+
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(University_Unit)
 admin.site.register(University_Building)
