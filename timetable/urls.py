@@ -16,6 +16,7 @@ from timetable.views.booking.booking import (
 from timetable.views.list_week import ListWeekView
 from timetable.views.list_auditorium import ListAuditoriumView
 from timetable.views.timtable import ScheduleView
+from timetable.views.import_shgpu_bot.importing import ImportScheduleView
 
 urlpatterns = [
     path('add-reservation/', AddTimeTableReservation.as_view(), name='add-user-reservation'),
@@ -43,4 +44,7 @@ urlpatterns = [
     path('list-week', ListWeekView.as_view(), name='list-week'),
     path('list-auditoriums/<str:monday>-<str:sunday>', ListAuditoriumView.as_view(), name='list-auditoriums'),
     path('schedule/<str:monday>-<str:sunday>', ScheduleView.as_view(), name='schedule'),
+    path(
+        'import-schedule-shspu/<str:monday>-<str:sunday>/', ImportScheduleView.as_view(), name='import-schedule-shspu'
+    ),
 ]

@@ -18,7 +18,7 @@ class Type_TimetableItem(models.Model):
 class TimetableItem(models.Model):
     name = models.CharField(max_length=60, blank=True, verbose_name='Название')
     organazer = models.ForeignKey(User, on_delete=CASCADE, blank=True, verbose_name='Ответсвенный')
-    type = models.ForeignKey(Type_TimetableItem, on_delete=CASCADE, blank=True, verbose_name='Тип мероприятия')
+    type = models.ForeignKey(Type_TimetableItem, on_delete=CASCADE, blank=False, null=True, verbose_name='Тип мероприятия')
     amount_people = models.IntegerField(blank=True, default=0, verbose_name='Количество человек')
     start_time = models.TimeField(auto_now=False, blank=True, verbose_name='Время начала')
     end_time = models.TimeField(auto_now=False, blank=True, verbose_name='Время окончания')
