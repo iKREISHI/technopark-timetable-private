@@ -4,10 +4,11 @@ from datetime import date, timedelta, datetime
 from string import Template
 import locale
 from users.models.university import Auditorium
-from timetable.models.timetable import TimetableItem
+from timetable.models.timetable import TimetableItem, Type_TimetableItem
 from timetable.views.import_shgpu_bot.config import *
 from django.contrib.auth.mixins import PermissionRequiredMixin, PermissionDenied, LoginRequiredMixin
 from timetable.views.import_shgpu_bot.connect import *
+from django.urls import reverse
 
 
 class import_schedule:
@@ -61,7 +62,7 @@ class import_schedule:
                             params = {
                                 # "auditorium": Auditorium.objects.filter(name=res[0].split()[-1]).first(),
                                 # "auditorium": Auditorium.objects.get(name=res[0].split()[-1]),
-                                "type": None,
+                                "type": Type_TimetableItem.objects.get(name="Мероприятие"),
                                 "organazer": user,
                                 "amount_people": 25,
                                 "start_time": self.time_pair[res[2]].split("-")[0],
@@ -72,6 +73,8 @@ class import_schedule:
                                 'who_approved': user,
                                 "datetime_approved": datetime.now(),
                             }
+                            # if TimetableItem.objects.filter(start_time=params["start_time"], end_time=params["end_time"], auditorium__name=res[0].split()[-1]).first():
+                            #     params["status"] = "PENDING"
                             obj, created = TimetableItem.objects.update_or_create(defaults=params, **param)
                             if created:
                                 print(f'Object was created successful - {res[0].replace("/ ", "")}')
@@ -95,7 +98,7 @@ class ImportScheduleView(View, LoginRequiredMixin):
         importing = import_schedule
         importing.importing(importing, start_week=mon, end_week=sun, user=request.user)
 
-        return redirect('/')
+        return redirect(reverse('schedule', args=[ monday, sunday]))
 
     def post(self, request):
         pass
