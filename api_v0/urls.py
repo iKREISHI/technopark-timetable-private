@@ -2,7 +2,7 @@ from django.urls import include, path
 from api_v0.views.timetable_item_baseinfo import (
     TimetableItemDetailView
 )
-from api_v0.views.BookingWeek import BookingCurrentWeekAPIView
+from api_v0.views.BookingWeek import BookingCurrentWeekAPIView, BookingWeekAPIView
 from api_v0.views.BookingCreate import BookingCreateAPIView, ReservationCreateAPIView
 
 
@@ -14,6 +14,10 @@ urlpatterns = [
     path(
         'booking-current-week/<int:auditorium_id>/', BookingCurrentWeekAPIView.as_view(),
         name='booking-current-week'
+    ),
+    path(
+        'booking-week/<str:monday>-<str:sunday>/', BookingWeekAPIView.as_view(),
+        name='booking-week',
     ),
     path(
         'booking-create/', BookingCreateAPIView.as_view(),
