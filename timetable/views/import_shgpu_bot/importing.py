@@ -58,6 +58,9 @@ class import_schedule:
                             print(f'-- {res}')
                             param = {
                                 "name": res[0].replace("/ ", "") + " " + res[-1],
+                                "start_time": self.time_pair[res[2]].split("-")[0],
+                                "end_time": self.time_pair[res[2]].split("-")[1],
+                                "date": day,
                             }
                             params = {
                                 # "auditorium": Auditorium.objects.filter(name=res[0].split()[-1]).first(),
@@ -65,9 +68,9 @@ class import_schedule:
                                 "type": Type_TimetableItem.objects.get(name="Мероприятие"),
                                 "organazer": user,
                                 "amount_people": 25,
-                                "start_time": self.time_pair[res[2]].split("-")[0],
-                                "end_time": self.time_pair[res[2]].split("-")[1],
-                                "date": day,
+                                # "start_time": self.time_pair[res[2]].split("-")[0],
+                                # "end_time": self.time_pair[res[2]].split("-")[1],
+                                # "date": day,
                                 "info": " ".join([s for s in res[0].replace("/ ", "").split()[2:]]),
                                 "status": "APPROVED",
                                 'who_approved': user,
@@ -88,7 +91,6 @@ class import_schedule:
 
 
 class ImportScheduleView(View, LoginRequiredMixin):
-
     def get(self, request, monday: str, sunday: str):
         if not request.user.is_superuser:
             raise PermissionDenied

@@ -7,3 +7,4 @@ docker/database/TimeTableDB/2.\ Init\ Database
 *.pyc
 app
 postgres_data
+config/DataBase.py
