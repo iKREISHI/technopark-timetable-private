@@ -11,7 +11,7 @@
         {% endfor %}
         <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'timetable-week' monday sunday %}'"> Расписание</button>
         <button type="button" class="btn btn-danger" onclick="window.location.href='{% url 'schedule' monday sunday %}'"> Расписание</button>
-        <button type="button" class="btn btn-success" onclick="window.location.href='{% url 'import-schedule-shspu' monday sunday %}'">Импорт расписания</button>
+        {% if user.is_superuser %}<button type="button" class="btn btn-success" onclick="window.location.href='{% url 'import-schedule-shspu' monday sunday %}'">Импорт расписания</button>{% endif %}
     </div>
 </div>
 {% endblock %}

@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from users.views.homepage import home
 # from timetable.views import
 from timetable.views.timetable_current_week import TimeTableCurrentWeekView

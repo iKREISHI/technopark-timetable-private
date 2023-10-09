@@ -3,7 +3,7 @@ from django.views import View
 from django.contrib.auth.mixins import PermissionRequiredMixin, PermissionDenied, LoginRequiredMixin
 from django.views.generic import ListView
 from timetable.models.timetable import TimetableItem
-from users.models.university import Auditorium
+from users.models.university import Auditorium, University_Unit
 from datetime import date, timedelta, datetime
 import locale
 
@@ -41,6 +41,7 @@ class ScheduleView(View):
                 f'- {end_week .strftime("%d")} {end_week .strftime("%B").capitalize()} {end_week .strftime("%y")} года',
             'day_of_week': days_of_week,
             'auditoriums': auditoriums,
+            'university_unit': University_Unit.objects.filter(show_in_timetable=True).all(),
             'timetable_items': data,
         }
 
@@ -78,6 +79,7 @@ class CurrentScheduleView(View):
                 f'- {end_week .strftime("%d")} {end_week .strftime("%B").capitalize()} {end_week .strftime("%y")} года',
             'day_of_week': days_of_week,
             'auditoriums': auditoriums,
+            'university_unit': University_Unit.objects.filter(show_in_timetable=True).all(),
             'timetable_items': data,
         }
 
