@@ -5,7 +5,7 @@ import json
 from django.contrib.auth.mixins import PermissionRequiredMixin, PermissionDenied, LoginRequiredMixin
 from django.views.generic import ListView
 from timetable.models.timetable import TimetableItem
-from users.models.university import Auditorium
+from users.models.university import Auditorium, University_Unit
 from datetime import date, timedelta
 
 
@@ -21,6 +21,7 @@ class TimeTableCurrentWeekView(View):
         context = {
             'title': f'Расписание на текущую неделю',
             'auditoriums': auditoriums,
+            'university_unit': University_Unit.objects.filter(show_in_timetable=True).all(),
             'start_week': start_week,
             'end_week': end_week,
 
