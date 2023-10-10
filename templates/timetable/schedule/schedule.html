@@ -63,11 +63,16 @@
                                             <td>
                                                 <table class="table">
                                                 {% for item in auditorium.timetableitem_set.all|dictsort:"start_time"|dictsort:"date" %}
-                                                    {% if item and item.date == day.value  and item.status == 'APPROVED' %}
+                                                    {% if item and item.date == day.value and item.status == 'APPROVED' %}
                                                         <tr class="text-center">
                                                             <td id="timetable-id={{ item.id }}"
                                                                 data-bs-toggle="modal"
-                                                                data-bs-target="#infoBookingModal">
+                                                                data-bs-target="#infoBookingModal"
+                                                                    {% if day.value > today %}
+                                                                        class="table-success"
+                                                                    {% elif day.value == today %} class="table-danger"
+                                                                    {% else %} class="table-secondary"{% endif %}
+                                                            >
                                                                 {{ item.name }}<br>
                                                                 {{ item.start_time }} - {{ item.end_time }}
                                                             </td>
