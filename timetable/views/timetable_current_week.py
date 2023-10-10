@@ -22,6 +22,7 @@ class TimeTableCurrentWeekView(View):
             'title': f'Расписание на текущую неделю',
             'auditoriums': auditoriums,
             'university_unit': University_Unit.objects.filter(show_in_timetable=True).all(),
+            'today': date.today(),
             'start_week': start_week,
             'end_week': end_week,
 

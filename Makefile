@@ -1,4 +1,5 @@
 .PHONY: backup
+
 build:
 	docker build .
 	docker-compose up -d --build
