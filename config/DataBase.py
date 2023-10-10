@@ -1,6 +1,0 @@
-# POSTGRES_HOST = "localhost" # -- localhost для запуска на пк, db - для запуска в docker
-POSTGRES_HOST = "db"
-POSTGRES_PORT = "5432"
-POSTGRES_DB = "timetableDB"
-POSTGRES_USER = "root_timetable"
-POSTGRES_PASSWORD = "timetable@technopark.db"
