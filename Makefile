@@ -1,3 +1,4 @@
+.PHONY: backup
 
 build:
 	docker build .
