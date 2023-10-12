@@ -65,7 +65,7 @@ class import_schedule:
                             params = {
                                 # "auditorium": Auditorium.objects.filter(name=res[0].split()[-1]).first(),
                                 # "auditorium": Auditorium.objects.get(name=res[0].split()[-1]),
-                                "type": Type_TimetableItem.objects.get(name="Мероприятие"),
+                                "type": Type_TimetableItem.objects.get(name="Учебное занятие"),
                                 "organazer": user,
                                 "amount_people": 25,
                                 # "start_time": self.time_pair[res[2]].split("-")[0],
