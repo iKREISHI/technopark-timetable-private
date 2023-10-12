@@ -9,9 +9,11 @@
         <li class="nav-item" hidden="hidden">
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
-{#        <li class="nav-item">#}
-{#          <a class="nav-link active" href="{% url 'list-week' %}">По неделям</a>#}
-{#        </li>#}
+        {% if not user.is_superuser %}
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'list-week' %}">По неделям</a>
+            </li>
+        {% endif %}
         <li class="nav-item">
           <a class="nav-link active" href="{% url 'list-week' %}">Забронировать аудиторию</a>
         </li>
