@@ -40,6 +40,7 @@ class ScheduleView(View):
                 f'{start_week .strftime("%d")} {start_week .strftime("%B").capitalize()} '
                 f'- {end_week .strftime("%d")} {end_week .strftime("%B").capitalize()} {end_week .strftime("%y")} года',
             'day_of_week': days_of_week,
+            'today': date.today(),
             'auditoriums': auditoriums,
             'university_unit': University_Unit.objects.filter(show_in_timetable=True).all(),
             'timetable_items': data,
