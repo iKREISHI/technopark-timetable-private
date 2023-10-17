@@ -22,6 +22,42 @@ class CustomUserAdmin(UserAdmin):
     )
 
 
+class AuditoriumAdmin(admin.ModelAdmin):
+    list_display = (
+        'name', 'type', 'building', 'area', 'capacity'
+    )
+    search_fields = (
+        'name',
+    )
+
+
+class UniversityUnitAdminPanel(admin.ModelAdmin):
+    list_display = (
+        'name', 'abbreviation', 'info',
+    )
+    search_fields = (
+        'name', 'abbreviation',
+    )
+
+
+class UniversityBuildingAdminPanel(admin.ModelAdmin):
+    list_display = (
+        'name', 'address', 'info'
+    )
+    search_fields = (
+        'name', 'address',
+    )
+
+
+class AuditoriumTypeAdminPanel(admin.ModelAdmin):
+    list_display = (
+        'name', 'info',
+    )
+    search_fields = (
+        'name',
+    )
+
+
 University_Unit._meta.verbose_name = 'Подразделение универститета'
 University_Unit._meta.verbose_name_plural = 'Подразделения университета'
 
@@ -35,7 +71,7 @@ Auditorium._meta.verbose_name = 'Аудитория'
 Auditorium._meta.verbose_name_plural = 'Аудитории'
 
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(University_Unit)
-admin.site.register(University_Building)
-admin.site.register(Auditorium_Type)
-admin.site.register(Auditorium)
+admin.site.register(University_Unit, UniversityUnitAdminPanel)
+admin.site.register(University_Building, UniversityBuildingAdminPanel)
+admin.site.register(Auditorium_Type, AuditoriumTypeAdminPanel)
+admin.site.register(Auditorium, AuditoriumAdmin)
