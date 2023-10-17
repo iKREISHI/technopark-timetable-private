@@ -1,7 +1,11 @@
 from datetime import date, timedelta
 from rest_framework import generics
 from timetable.models.timetable import TimetableItem, Type_TimetableItem
-from api_v0.serializers.TimetableItemSerializer import TimetableItemBaseInfoSerializer
+from users.models.university import Auditorium
+from api_v0.serializers.TimetableItemSerializer import (
+    TimetableItemBaseInfoSerializer, TimetableAuditoriumReservationSerializer,
+    BookingSerialazer
+)
 from datetime import datetime
 
 
@@ -38,3 +42,36 @@ class BookingWeekAPIView(generics.ListAPIView):
 
         return queryset
 
+
+class BookingWeekMinimalAPIView(generics.ListAPIView):
+    serializer_class = BookingSerialazer
+
+    def get_queryset(self):
+        start_week = datetime.strptime(self.kwargs['monday'], '%d_%m_%y').date()
+        end_week = datetime.strptime(self.kwargs['sunday'], '%d_%m_%y').date()
+
+        queryset = TimetableItem.objects.filter(
+            date__range=[start_week, end_week]
+        ).all().order_by('date', 'start_time')
+
+        return queryset
+
+
+class BookingByWeekAPIView(generics.ListAPIView):
+    serializer_class = TimetableAuditoriumReservationSerializer
+
+    def get_queryset(self):
+        start_week = datetime.strptime(self.kwargs['monday'], '%d_%m_%y').date()
+        end_week = datetime.strptime(self.kwargs['sunday'], '%d_%m_%y').date()
+
+        items = TimetableItem.objects.filter(
+            date__range=[start_week, end_week]
+        ).all().order_by('date', 'start_time')
+
+
+
+        queryset = Auditorium.objects.all().timetableitem_set.filter(
+            date__range=[start_week, end_week]
+        )
+
+        return queryset

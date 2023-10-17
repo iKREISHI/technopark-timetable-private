@@ -6,15 +6,25 @@ from timetable.models.timetable import (
 from users.models.university import (
     Auditorium
 )
-from api_v0.serializers.Users import UserBaseInfoSerializer
-from api_v0.serializers.University import AuditoriumSerializer
+from api_v0.serializers.Users import (
+    UserBaseInfoSerializer,
+    UserMinimalSerializer,
+)
+from api_v0.serializers.University import AuditoriumSerializer, AuditoriumMinimalSerializer
 
 
 class TypeTimetableItemSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Type_TimetableItem
         fields = '__all__'
+
+
+class TypeTimetableMinimalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Type_TimetableItem
+        fields = [
+            'id', 'name'
+        ]
 
 
 class TimetableItemBaseInfoSerializer(serializers.ModelSerializer):
@@ -22,6 +32,21 @@ class TimetableItemBaseInfoSerializer(serializers.ModelSerializer):
     type = TypeTimetableItemSerializer()
     auditorium = AuditoriumSerializer(many=True)
     date = serializers.DateField(format="%d-%m-%Y", input_formats=['%d-%m-%Y', 'iso-8601'])
+
+    class Meta:
+        model = TimetableItem
+        fields = [
+            'id', 'name', 'organazer', 'type', 'amount_people',
+            'date', 'start_time', 'end_time', 'auditorium', 'info'
+        ]
+
+
+class BookingSerialazer(serializers.ModelSerializer):
+    organazer = UserMinimalSerializer()
+    type = TypeTimetableMinimalSerializer()
+    auditorium = AuditoriumMinimalSerializer(many=True)
+    date = serializers.DateField(format="%d-%m-%Y", input_formats=['%d-%m-%Y', 'iso-8601'])
+
     class Meta:
         model = TimetableItem
         fields = [
@@ -32,6 +57,7 @@ class TimetableItemBaseInfoSerializer(serializers.ModelSerializer):
 
 class TimetableItemSerializer(serializers.ModelSerializer):
     date = serializers.DateField(format="%d-%m-%Y", input_formats=['%d-%m-%Y', 'iso-8601'])
+
     class Meta:
         model = TimetableItem
         fields = '__all__'
@@ -43,4 +69,12 @@ class TimetableReservationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimetableItem
+        fields = '__all__'
+
+
+class TimetableAuditoriumReservationSerializer(serializers.ModelSerializer):
+    timetable = TimetableItemSerializer(many=True)
+
+    class Meta:
+        model = Auditorium,
         fields = '__all__'

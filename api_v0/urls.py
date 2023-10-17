@@ -2,8 +2,13 @@ from django.urls import include, path
 from api_v0.views.timetable_item_baseinfo import (
     TimetableItemDetailView
 )
-from api_v0.views.BookingWeek import BookingCurrentWeekAPIView, BookingWeekAPIView
+from api_v0.views.BookingWeek import (
+    BookingCurrentWeekAPIView,
+    BookingWeekAPIView, BookingByWeekAPIView,
+    BookingWeekMinimalAPIView
+)
 from api_v0.views.BookingCreate import BookingCreateAPIView, ReservationCreateAPIView
+from api_v0.views.AuditoriumView import getAuditoriumAPIView
 
 
 urlpatterns = [
@@ -27,4 +32,16 @@ urlpatterns = [
         'add-reservation/', ReservationCreateAPIView.as_view(),
         name='add-reservation-api'
     ),
+    path(
+        'get-auditoriums/', getAuditoriumAPIView.as_view(),
+        name='get-auditoriums',
+    ),
+    path(
+        'get-booking-week/<str:monday>-<str:sunday>/', BookingWeekMinimalAPIView.as_view(),
+        name='get-booking-week',
+    ),
+    # path(
+    #     'booking-by-week/<str:monday>-<str:sunday>/', BookingByWeekAPIView.as_view(),
+    #     name='booking-by-week',
+    # ),
 ]
