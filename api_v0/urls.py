@@ -5,7 +5,8 @@ from api_v0.views.timetable_item_baseinfo import (
 from api_v0.views.BookingWeek import (
     BookingCurrentWeekAPIView,
     BookingWeekAPIView, BookingByWeekAPIView,
-    BookingWeekMinimalAPIView
+    BookingWeekMinimalAPIView,
+    BookingCurrentWeekMinimalAPIView
 )
 from api_v0.views.BookingCreate import BookingCreateAPIView, ReservationCreateAPIView
 from api_v0.views.AuditoriumView import getAuditoriumAPIView
@@ -39,6 +40,10 @@ urlpatterns = [
     path(
         'get-booking-week/<str:monday>-<str:sunday>/', BookingWeekMinimalAPIView.as_view(),
         name='get-booking-week',
+    ),
+    path(
+        'get-booking-current-week/', BookingCurrentWeekMinimalAPIView.as_view(),
+        name='get-booking-current-week',
     ),
     # path(
     #     'booking-by-week/<str:monday>-<str:sunday>/', BookingByWeekAPIView.as_view(),
