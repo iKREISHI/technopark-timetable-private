@@ -1,5 +1,7 @@
 from datetime import date, timedelta
 from rest_framework import generics
+from rest_framework.response import Response
+
 from timetable.models.timetable import TimetableItem, Type_TimetableItem
 from users.models.university import Auditorium
 from api_v0.serializers.TimetableItemSerializer import (
@@ -21,10 +23,27 @@ class BookingCurrentWeekAPIView(generics.ListAPIView):
 
         queryset = TimetableItem.objects.filter(
             auditorium=auditorium_id,
-            date__range=[start_week, end_week]
+            date__range=[start_week, end_week],
+            status='APPROVED',
         ).all().order_by('date', 'start_time')
 
         return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        week_data = {
+            'start_week': datetime.strptime(self.kwargs['monday'], '%d_%m_%y').date(),
+            'end_week': datetime.strptime(self.kwargs['sunday'], '%d_%m_%y').date(),
+        }
+
+        data = {
+            **week_data,
+            'results': serializer.data,
+        }
+
+        return Response(data)
 
 
 class BookingWeekAPIView(generics.ListAPIView):
@@ -37,10 +56,27 @@ class BookingWeekAPIView(generics.ListAPIView):
 
         queryset = TimetableItem.objects.filter(
             # auditorium=auditorium_id,
-            date__range=[start_week, end_week]
+            date__range=[start_week, end_week],
+            status='APPROVED',
         ).all().order_by('date', 'start_time')
 
         return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        week_data = {
+            'start_week': datetime.strptime(self.kwargs['monday'], '%d_%m_%y').date(),
+            'end_week': datetime.strptime(self.kwargs['sunday'], '%d_%m_%y').date(),
+        }
+
+        data = {
+            **week_data,
+            'results': serializer.data,
+        }
+
+        return Response(data)
 
 
 class BookingWeekMinimalAPIView(generics.ListAPIView):
@@ -51,10 +87,27 @@ class BookingWeekMinimalAPIView(generics.ListAPIView):
         end_week = datetime.strptime(self.kwargs['sunday'], '%d_%m_%y').date()
 
         queryset = TimetableItem.objects.filter(
-            date__range=[start_week, end_week]
+            date__range=[start_week, end_week],
+            status='APPROVED',
         ).all().order_by('date', 'start_time')
 
         return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        week_data = {
+            'start_week': datetime.strptime(self.kwargs['monday'], '%d_%m_%y').date(),
+            'end_week':   datetime.strptime(self.kwargs['sunday'], '%d_%m_%y').date(),
+        }
+
+        data = {
+            **week_data,
+            'results': serializer.data,
+        }
+
+        return Response(data)
 
 
 class BookingByWeekAPIView(generics.ListAPIView):
