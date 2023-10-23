@@ -4,12 +4,17 @@ from api_v0.views.timetable_item_baseinfo import (
 )
 from api_v0.views.BookingWeek import (
     BookingCurrentWeekAPIView,
-    BookingWeekAPIView, BookingByWeekAPIView,
+    BookingWeekAPIView,
     BookingWeekMinimalAPIView,
-    BookingCurrentWeekMinimalAPIView
+    BookingCurrentWeekMinimalAPIView,
+    BookingByUUListAPIView,
+    BookingByUUCurrentWeekListAPIView,
 )
 from api_v0.views.BookingCreate import BookingCreateAPIView, ReservationCreateAPIView
-from api_v0.views.AuditoriumView import getAuditoriumAPIView
+from api_v0.views.AuditoriumView import (
+    getAuditoriumAPIView,
+    getAuditoriumsListAPIView
+)
 
 
 urlpatterns = [
@@ -42,11 +47,21 @@ urlpatterns = [
         name='get-booking-week',
     ),
     path(
+        'get-list-auditoriums/', getAuditoriumsListAPIView.as_view(),
+        name='get-list-auditoriums',
+    ),
+    path(
         'get-booking-current-week/', BookingCurrentWeekMinimalAPIView.as_view(),
         name='get-booking-current-week',
     ),
-    # path(
-    #     'booking-by-week/<str:monday>-<str:sunday>/', BookingByWeekAPIView.as_view(),
-    #     name='booking-by-week',
-    # ),
+    path(
+        'get-booking-week/<int:id_university_unit>/<str:monday>-<str:sunday>/',
+        BookingByUUListAPIView.as_view(),
+        name='get-booking-week-by-uu',
+    ),
+    path(
+        'get-booking-current-week/<int:id_university_unit>/',
+        BookingByUUCurrentWeekListAPIView.as_view(),
+        name='get-booking-current-week-by-uu',
+    ),
 ]

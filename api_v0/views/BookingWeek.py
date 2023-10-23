@@ -103,7 +103,7 @@ class BookingWeekMinimalAPIView(generics.ListAPIView):
 
         week_data = {
             'start_week': datetime.strptime(self.kwargs['monday'], '%d_%m_%y').date(),
-            'end_week':   datetime.strptime(self.kwargs['sunday'], '%d_%m_%y').date(),
+            'end_week': datetime.strptime(self.kwargs['sunday'], '%d_%m_%y').date(),
         }
 
         data = {
@@ -129,22 +129,57 @@ class BookingCurrentWeekMinimalAPIView(BookingCurrentWeekAPIView):
 
         return queryset
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
 
-class BookingByWeekAPIView(generics.ListAPIView):
-    serializer_class = TimetableAuditoriumReservationSerializer
+        today = date.today()
+        start_week = today - timedelta(days=today.weekday())
+        end_week = start_week + timedelta(days=6)
+
+        week_data = {
+            'start_week': start_week,
+            'end_week': end_week,
+        }
+
+        data = {
+            **week_data,
+            'results': serializer.data,
+        }
+
+        return Response(data)
+
+# BookingByUniversityUnitListAPIView
+class BookingByUUListAPIView(BookingWeekMinimalAPIView):
+    serializer_class = BookingSerialazer
 
     def get_queryset(self):
+        id_university_unit = self.kwargs['id_university_unit']
         start_week = datetime.strptime(self.kwargs['monday'], '%d_%m_%y').date()
         end_week = datetime.strptime(self.kwargs['sunday'], '%d_%m_%y').date()
-
-        items = TimetableItem.objects.filter(
-            date__range=[start_week, end_week]
+        queryset = TimetableItem.objects.filter(
+            auditorium__university_unit_id=id_university_unit,
+            date__range=[start_week, end_week],
+            status='APPROVED',
         ).all().order_by('date', 'start_time')
 
+        return queryset
 
 
-        queryset = Auditorium.objects.all().timetableitem_set.filter(
-            date__range=[start_week, end_week]
-        )
+# BookingByUniversityUnitListAPIView
+class BookingByUUCurrentWeekListAPIView(BookingCurrentWeekMinimalAPIView):
+    serializer_class = BookingSerialazer
+
+    def get_queryset(self):
+        id_university_unit = int(self.kwargs['id_university_unit'])
+        today = date.today()
+        start_week = today - timedelta(days=today.weekday())
+        end_week = start_week + timedelta(days=6)
+
+        queryset = TimetableItem.objects.filter(
+            auditorium__university_unit_id=id_university_unit,
+            date__range=[start_week, end_week],
+            status='APPROVED',
+        ).all().order_by('date', 'start_time')
 
         return queryset
