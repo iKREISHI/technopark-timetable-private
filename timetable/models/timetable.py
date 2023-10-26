@@ -8,7 +8,7 @@ from users.models.university import Auditorium
 
 
 class Type_TimetableItem(models.Model):
-    name = models.CharField(max_length=60, blank=True)
+    name = models.CharField(max_length=100, blank=True)
     info = models.TextField(blank=True)
 
     def __str__(self):
@@ -16,7 +16,7 @@ class Type_TimetableItem(models.Model):
 
 
 class TimetableItem(models.Model):
-    name = models.CharField(max_length=60, blank=True, verbose_name='Название')
+    name = models.CharField(max_length=200, blank=True, verbose_name='Название')
     organazer = models.ForeignKey(User, on_delete=CASCADE, blank=True, verbose_name='Ответсвенный')
     type = models.ForeignKey(Type_TimetableItem, on_delete=CASCADE, blank=False, null=True, verbose_name='Тип мероприятия')
     amount_people = models.IntegerField(blank=True, default=0, verbose_name='Количество человек')

@@ -44,6 +44,7 @@ class import_schedule:
         )
         cursor = get_cursor(conn)
         day = start_week
+        group_old = ''
         while day <= end_week:
             str_day = date.strftime(day, "%Y-%m-%d")
             print(str_day)
@@ -55,38 +56,61 @@ class import_schedule:
                 for aud in self.auditoriums:
                     try:
                         if res[0].split()[-1].lower() == aud.name.lower():
-                            print(f'-- {res}')
+                            print(f'--res: {res}')
+
                             param = {
-                                "name": res[0].replace("/ ", "") + " " + res[-1],
+                                "name": res[0].replace("/ ", ""),
                                 "start_time": self.time_pair[res[2]].split("-")[0],
                                 "end_time": self.time_pair[res[2]].split("-")[1],
                                 "date": day,
                             }
+                            group = {
+                                "name": res[-1],
+                                "start_time": param["start_time"],
+                                "date": param["date"],
+                                "aud": param["name"].split()[-1],
+                            }
                             params = {
-                                # "auditorium": Auditorium.objects.filter(name=res[0].split()[-1]).first(),
-                                # "auditorium": Auditorium.objects.get(name=res[0].split()[-1]),
                                 "type": Type_TimetableItem.objects.get(name="Учебное занятие"),
                                 "organazer": user,
                                 "amount_people": 25,
-                                # "start_time": self.time_pair[res[2]].split("-")[0],
-                                # "end_time": self.time_pair[res[2]].split("-")[1],
-                                # "date": day,
-                                "info": " ".join([s for s in res[0].replace("/ ", "").split()[2:]]),
+                                "info": " ".join([s for s in res[0].replace("/ ", "").split()[2:]]) + " | группы " + group["name"],
                                 "status": "APPROVED",
                                 'who_approved': user,
                                 "datetime_approved": datetime.now(),
                             }
+
                             # if TimetableItem.objects.filter(start_time=params["start_time"], end_time=params["end_time"], auditorium__name=res[0].split()[-1]).first():
                             #     params["status"] = "PENDING"
+                            # Поиск существующей записи и ее изменение
+                            for item in TimetableItem.objects.filter(
+                                date=param["date"], status='APPROVED',
+                            ).all():
+                                if item.name.find(param["name"]) != -1:
+                                    # item.name = param["name"]
+                                    # info = item.info + " " + group
+                                    item.delete()
+                                    if group_old != '' and group_old["date"] == param["date"] and group_old["start_time"] == param["start_time"] and group_old["aud"] == param["name"].split()[-1]:
+                                        params["info"] = params["info"] + "," + group_old["name"]
+                                    obj, created = TimetableItem.objects.update_or_create(defaults=params, **param)
+                                    if created:
+                                        print(f'--- Object was created successful - {res[0].replace("/ ", "")}')
+                                    else:
+                                        print(f'--- Object was updated: id={obj.id} name={param["name"]}')
+                                    break
                             obj, created = TimetableItem.objects.update_or_create(defaults=params, **param)
                             if created:
                                 print(f'Object was created successful - {res[0].replace("/ ", "")}')
-                            else:
-                                print('Object was updated')
+                            # else:
+                            #     print(f'Object was updated: id={obj.id} name={param["name"]}')
+                                # print(' '.join(str(param['name']).split()[:-1]))
                             obj.auditorium.set([Auditorium.objects.get(name=res[0].split()[-1])])
+                            group_old = group
                     except Exception as e:
-                        print(f'error!: {e} | {res}')
+                        print(f'error!: {e}')
+                        print(res)
             day = day + timedelta(days=1)
+        group_old = ''
         close_connection(conn)
 
 

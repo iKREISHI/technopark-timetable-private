@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'timetable.apps.TimetableConfig',
     #'timetable',
     'api_v0',
+    'export2xlsx',
 
 ]
 

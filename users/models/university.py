@@ -3,8 +3,8 @@ from django.db.models import CASCADE
 
 
 class University_Unit(models.Model):
-    name = models.CharField(max_length=60, blank=True, verbose_name='Название подразделения')
-    abbreviation = models.CharField(max_length=10, verbose_name='Аббревиатура подразделения')
+    name = models.CharField(max_length=200, blank=True, verbose_name='Название подразделения')
+    abbreviation = models.CharField(max_length=20, verbose_name='Аббревиатура подразделения')
     show_in_timetable = models.BooleanField(
         blank=False, null=True,
         verbose_name='Выводить в расписании',
@@ -28,7 +28,7 @@ class University_Unit(models.Model):
 
 
 class University_Building(models.Model):
-    name = models.CharField(max_length=60, blank=True)
+    name = models.CharField(max_length=100, blank=True)
     address = models.CharField(max_length=200)
     info = models.TextField()
 
@@ -37,7 +37,7 @@ class University_Building(models.Model):
 
 
 class Auditorium_Type(models.Model):
-    name = models.CharField(max_length=60, blank=True)
+    name = models.CharField(max_length=100, blank=True)
     info = models.TextField()
 
     def __str__(self):

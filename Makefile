@@ -36,6 +36,7 @@ rebuild-compose:
 	docker-compose exec web python manage.py loaddata users_data.json
 	docker-compose exec web python manage.py loaddata timetable_data.json
 	docker-compose exec web ./backup_script.sh
+# ./manage.py loaddata --exclude auth.permission --exclude contenttypes
 #	docker-compose exec web cron -f
 #	docker-compose exec web python manage.py runcrons
 #	docker-compose exec web python manage.py dbbackup
