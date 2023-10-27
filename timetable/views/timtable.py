@@ -42,6 +42,8 @@ class ScheduleView(View):
             'day_of_week': days_of_week,
             'today': date.today(),
             'auditoriums': auditoriums,
+            'monday': datetime.strftime(start_week, '%d_%m_%y'),
+            'sunday': datetime.strftime(end_week, '%d_%m_%y'),
             'university_unit': University_Unit.objects.filter(show_in_timetable=True).all(),
             'timetable_items': data,
         }
@@ -81,6 +83,8 @@ class CurrentScheduleView(View):
             'day_of_week': days_of_week,
             'today': date.today(),
             'auditoriums': auditoriums,
+            'monday': datetime.strftime(start_week, '%d_%m_%y'),
+            'sunday': datetime.strftime(end_week, '%d_%m_%y'),
             'university_unit': University_Unit.objects.filter(show_in_timetable=True).all(),
             'timetable_items': data,
         }

@@ -14,6 +14,7 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('timetable/', include('timetable.urls')),
     path('captcha/', include('captcha.urls')),
-    path('api/v0/', include('api_v0.urls'))
+    path('api/v0/', include('api_v0.urls')),
+    path('export/', include('export2xlsx.urls')),
 
 ]
