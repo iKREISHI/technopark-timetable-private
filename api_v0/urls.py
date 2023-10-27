@@ -13,7 +13,8 @@ from api_v0.views.BookingWeek import (
 from api_v0.views.BookingCreate import BookingCreateAPIView, ReservationCreateAPIView
 from api_v0.views.AuditoriumView import (
     getAuditoriumAPIView,
-    getAuditoriumsListAPIView
+    getAuditoriumsListAPIView,
+    getAuditoriumByUUListAPIView, getAuditoriumByUUAPIView
 )
 
 
@@ -43,11 +44,19 @@ urlpatterns = [
         name='get-auditoriums',
     ),
     path(
+        'get-auditoriums/<int:id_university_unit>/', getAuditoriumByUUAPIView.as_view(),
+        name='get-auditoriums-by-uu',
+    ),
+    path(
         'get-booking-week/<str:monday>-<str:sunday>/', BookingWeekMinimalAPIView.as_view(),
         name='get-booking-week',
     ),
     path(
         'get-list-auditoriums/', getAuditoriumsListAPIView.as_view(),
+        name='get-list-auditoriums',
+    ),
+    path(
+        'get-list-auditoriums/<int:id_university_unit>/', getAuditoriumByUUListAPIView.as_view(),
         name='get-list-auditoriums',
     ),
     path(
