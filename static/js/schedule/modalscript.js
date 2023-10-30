@@ -23,6 +23,7 @@ function getTimetableItemBaseInfo(id) {
                   out.append('<p>Дата: '+ response.date +'</p>');
                   out.append('<p>Время начала: '+ response.start_time +'</p>');
                   out.append('<p>Время окончания: '+ response.end_time +'</p>');
+                  out.append('<p>Количество человек: ' + response.amount_people + '</p>');
                   $.each(response.auditorium, (index, auditorium) => {
                       out.append('<p>Аудитория: '+ auditorium.name +'</p>')
                   });

@@ -50,8 +50,9 @@ $('#BookingFormModal').on('show.bs.modal', (event) => {
     let day = event.relatedTarget.id.split(';')[0].split('=')[1];
     let aud_id = event.relatedTarget.id.split(';')[1].split('=')[1];
     day = parseDate(day);
+    //day.month -= 1;
     console.log(event.relatedTarget.id);
-    console.log(day, typeof(day), day.getDate(), day.getMonth(), day.getFullYear());
+    console.log(day, typeof(day), day.getDate(), day.getMonth()-1, day.getFullYear());
     console.log(aud_id);
     day_booking = day;
     aud_id_booking = aud_id;
@@ -73,12 +74,13 @@ $('#modal-form-booking').submit((event) => {
         date = day_booking;
     }
     let date_day = date.getDate();
-    let date_month = date.getMonth();
+    let date_month = date.getMonth() - 1;
     let date_year = date.getFullYear();
     if (aud_id_booking != null) {
         aud = aud_id_booking;
     }
     console.log(name, type, start_time, end_time, amount, info, aud);
+    console.log(date_day + '-' + date_month + '-' + date_year);
     $.ajax({
         url: '/api/v0/booking-create/',
         type: 'POST',
@@ -157,8 +159,9 @@ let parseDate = (dateString)=> {
       const month = months[parts[1]];
       const year = parseInt(parts[2], 10);
 
-      const milliseconds = Date.parse(`${year}-${month + 1}-${day}`);
+      const milliseconds = Date.parse(`${year}-${month-1}-${day}`);
       const date = new Date(milliseconds);
+      console.log("Date: "+ date);
 
       return date;
 }

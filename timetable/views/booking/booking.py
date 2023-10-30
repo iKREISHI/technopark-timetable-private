@@ -32,7 +32,8 @@ class BookingTimeTableView(View, LoginRequiredMixin):
                 'value': current_day,
                 'date': current_day.strftime("%d"),
                 'month': current_day.strftime("%B").capitalize(),
-                'weekday': current_day.strftime("%A").capitalize()
+                'weekday': current_day.strftime("%A").capitalize(),
+                'date_serializtion': current_day.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
             }
             days_of_week.append(day_info)
             current_day += timedelta(days=1)

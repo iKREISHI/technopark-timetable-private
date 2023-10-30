@@ -15,7 +15,7 @@ RUN echo 'LANG=ru_RU.UTF-8' >> /etc/default/locale
 RUN ln -sf /usr/share/zoneinfo/Asia/Yekaterinburg /etc/localtime
 RUN echo "Asia/Yekaterinburg" > /etc/timezone
 
-RUN apt-get install -y postgresql-client cron vim mc procps libpq-dev
+RUN apt-get install -y postgresql-client cron vim mc procps libpq-dev python3-requests
 
 RUN pip install --upgrade pip
 COPY ./requirements.txt .

@@ -9,12 +9,9 @@ import translate
 import datetime
 import copy
 import os
-from django.conf import settings
 
-def json_to_excel(
-        json_couples,
-        json_list="http://tpbook2.shgpi/api/v0/get-auditoriums/?format=json", lang="ru"
-):
+
+def json_to_excel(json_couples, json_list="http://tpbook2.shgpi/api/v0/get-auditoriums/?format=json", lang="ru"):
     """
 Creates an Excel file.
 Keyword arguments:
@@ -22,9 +19,6 @@ json_couples (str): link to JSON file with pairs
 json_list (str): link to JSON file with audiences (default "http://tpbook2.shgpi/api/v0/get-auditoriums/?format=json")
 lang (str): the language in which the Excel file will be created (default "ru")
     """
-
-    file_name = '-1'
-    path = os.getcwd()
     weekdays = (
         ("ПН", "MO"),
         ("ВТ", "TU"),
@@ -41,6 +35,7 @@ lang (str): the language in which the Excel file will be created (default "ru")
         "15:00-16:30",
         "16:40-18:10",
     )
+    path = os.getcwd()
     couples_indexes = {}
     alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     teacher_name = ''
@@ -182,18 +177,28 @@ lang (str): the language in which the Excel file will be created (default "ru")
                             continue
                         skip = True
                         times_index += 1
+                        excel_date = sheet[f"A{day_index}"].value.split('.')
+                        data_date = data["results"][index_value]["date"].split('-')
                         excel_end_time = datetime.time(int(sheet[f"B{row_num}"].value.split('-')[1].split(':')[0]),
                                                        int(sheet[f"B{row_num}"].value.split('-')[1].split(':')[1]))
                         data_end_time = datetime.time(int(data["results"][index_value]["end_time"].split(':')[0]),
                                                       int(data["results"][index_value]["end_time"].split(':')[1]))
                         if lang == "ru":
-                            if (sheet[f"A{day_index}"].value[:2] == data["results"][index_value]["date"][:2]
+                            if (datetime.date(int(excel_date[2]),
+                                              int(excel_date[1]),
+                                              int(excel_date[0])) == datetime.date(int(data_date[2]),
+                                                                                   int(data_date[1]),
+                                                                                   int(data_date[0]))
                                     and excel_end_time == data_end_time):
                                 sheet[f"{alphabet[let_num + 2]}{row_num}"] = teacher_name
                                 sheet[f"{alphabet[let_num + 2]}{row_num + 1}"] = info
                                 couples_indexes_copy[key].remove(index_value)
                         else:
-                            if (sheet[f"A{day_index}"].value[3:5] == data["results"][index_value]["date"][:2]
+                            if (datetime.date(int(excel_date[2]),
+                                              int(excel_date[0]),
+                                              int(excel_date[1])) == datetime.date(int(data_date[2]),
+                                                                                   int(data_date[0]),
+                                                                                   int(data_date[1]))
                                     and excel_end_time == data_end_time):
                                 sheet[f"{alphabet[let_num + 2]}{row_num}"] = (
                                     translate.Translator("en", "ru").translate(teacher_name))
@@ -218,7 +223,7 @@ lang (str): the language in which the Excel file will be created (default "ru")
                 day_index = 5
                 skip = False
                 for row_num in range(3, 79):
-                    if times_index == 6 and not skip:
+                    if times_index > 5 and not skip:
                         times_index = 0
                         day_index += 13
                         continue
@@ -227,7 +232,18 @@ lang (str): the language in which the Excel file will be created (default "ru")
                         continue
                     skip = True
                     times_index += 1
-                    if (sheet[f"A{day_index}"].value[:2] == data["results"][index_value]["date"][:2]
+                    excel_date = sheet[f"A{day_index}"].value.split('.')
+                    data_date = data["results"][index_value]["date"].split('-')
+                    if (lang == "ru" and datetime.date(int(excel_date[2]),
+                                                       int(excel_date[1]),
+                                                       int(excel_date[0])) == datetime.date(int(data_date[2]),
+                                                                                            int(data_date[1]),
+                                                                                            int(data_date[0]))
+                            or lang != "ru" and datetime.date(int(excel_date[2]),
+                                                              int(excel_date[0]),
+                                                              int(excel_date[1])) == datetime.date(int(data_date[2]),
+                                                                                                   int(data_date[0]),
+                                                                                                   int(data_date[1]))
                             and sheet[f"{alphabet[aud_index]}{row_num}"].value is None
                             and sheet[f"{alphabet[aud_index]}{row_num + 1}"].value is None):
                         sheet[f"{alphabet[aud_index]}{row_num}"] = \
@@ -274,14 +290,14 @@ lang (str): the language in which the Excel file will be created (default "ru")
                 right=openpyxl.styles.Side(style="thin"))
             skip = True
             times_index += 1
-
     file_name = \
-        f"Technopark_schedule_{sheet['A5'].value.replace('.', '_')}_"\
-        f"{sheet['A70'].value.replace('.', '_')}.xlsx"
+            f"Technopark_schedule_{sheet['A5'].value.replace('.', '_')}_"\
+            f"{sheet['A70'].value.replace('.', '_')}.xlsx"
     schedule.save(path + '/' + file_name)
 
-
     return file_name
+
+
 #
 #
 # if __name__ == "__main__":
@@ -290,3 +306,7 @@ lang (str): the language in which the Excel file will be created (default "ru")
 #     else:
 #         print("This is a module for creating a schedule in the classrooms of the ShSPU Technopark.")
 #     print(json_to_excel.__doc__)
+# file_name = \
+#         f"Technopark_schedule_{sheet['A5'].value.replace('.', '_')}_"\
+#         f"{sheet['A70'].value.replace('.', '_')}.xlsx"
+#     schedule.save(path + '/' + file_name) path = os.getcwd()
