@@ -1,5 +1,6 @@
 var day_booking = null;
 var aud_id_booking = null;
+var Day, Month, Year = null;
 
 $('#infoBookingModal').on('show.bs.modal', (event) => {
     let item_id = event.relatedTarget.id.split('=')[1];
@@ -47,14 +48,13 @@ function getTimetableItemBaseInfo(id) {
 }
 
 $('#BookingFormModal').on('show.bs.modal', (event) => {
+    console.log(event);
     let day = event.relatedTarget.id.split(';')[0].split('=')[1];
     let aud_id = event.relatedTarget.id.split(';')[1].split('=')[1];
-    day = parseDate(day);
+    getDateStr(day);
     //day.month -= 1;
     console.log(event.relatedTarget.id);
-    console.log(day, typeof(day), day.getDate(), day.getMonth()-1, day.getFullYear());
     console.log(aud_id);
-    day_booking = day;
     aud_id_booking = aud_id;
     $('#modal-form-booking')[0].reset();
 
@@ -70,17 +70,12 @@ $('#modal-form-booking').submit((event) => {
     let info = $('#id_info').val();
     let date = null;
     let aud = null;
-    if (day_booking != null) {
-        date = day_booking;
-    }
-    let date_day = date.getDate();
-    let date_month = date.getMonth() - 1;
-    let date_year = date.getFullYear();
     if (aud_id_booking != null) {
         aud = aud_id_booking;
     }
     console.log(name, type, start_time, end_time, amount, info, aud);
-    console.log(date_day + '-' + date_month + '-' + date_year);
+    console.log('-----------------');
+    console.log(Day + '-' + Month + '-' + Year);
     $.ajax({
         url: '/api/v0/booking-create/',
         type: 'POST',
@@ -88,7 +83,7 @@ $('#modal-form-booking').submit((event) => {
             'name': name,
             'type': type,
             'amount_people': amount,
-            'date': date_day + '-' + date_month + '-' + date_year,
+            'date': Year + '-' + Month + '-' + Day,
             'start_time': start_time,
             'end_time': end_time,
             'auditorium': aud,
@@ -136,11 +131,9 @@ let getCookie = (name) => {
     return cookieValue;
 }
 
-
-let parseDate = (dateString)=> {
-      const parts = dateString.split(" ");
-
-      const months = {
+function getDateStr(dateStr) {
+    const parts = dateStr.split(" ");
+    const months = {
             "января": 1,
             "февраля": 2,
             "марта": 3,
@@ -158,10 +151,5 @@ let parseDate = (dateString)=> {
       const day = parseInt(parts[0], 10);
       const month = months[parts[1]];
       const year = parseInt(parts[2], 10);
-
-      const milliseconds = Date.parse(`${year}-${month-1}-${day}`);
-      const date = new Date(milliseconds);
-      console.log("Date: "+ date);
-
-      return date;
+      Day = day; Month = month; Year = year;
 }
