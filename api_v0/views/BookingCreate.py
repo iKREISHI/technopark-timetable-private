@@ -43,6 +43,7 @@ class BookingCreateAPIView(generics.CreateAPIView):
             end_time__gte=start_time,
             status='APPROVED',
         )
+        print(serializer)
         if existing_bookings.exists():
             raise serializers.ValidationError(f'Аудитория {Auditorium.objects.filter(id=auditorium).first()} занята на выбранное время и дата. Выберите другое время.')
 
@@ -54,6 +55,7 @@ class BookingCreateAPIView(generics.CreateAPIView):
             serializer.save(
                 organazer=self.request.user,
                 auditorium=auditorium,
+                date=date,
                 status='APPROVED',
                 who_approved=self.request.user,
                 datetime_approved=timezone.now()
@@ -62,6 +64,7 @@ class BookingCreateAPIView(generics.CreateAPIView):
             serializer.save(
                 organazer=self.request.user,
                 auditorium=auditorium,
+                date=date,
             )
 
 

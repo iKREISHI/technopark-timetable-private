@@ -34,7 +34,13 @@
                 <div class="card card-body">
                     <div class="row justify-content-center" id="export2pdf_{{ unit.id }}">
 {#                    <h2 class="text-center">{{ title }}<button class="btn bi bi-download" onclick="convertToPDF('export2pdf_{{ unit.id }}', '{{ title }}')"></button></h2>#}
-                    <h2 class="text-center">{{ title }}<button class="btn bi bi-download" onclick="window.open('{% url 'get-file-schedule' monday sunday unit.id %}', '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');"></button></h2>
+                    <h2 class="text-center">{{ title }}
+                        <button class="btn bi bi-download"
+                            onclick="openedWindow = window.open('{% url 'get-file-schedule' monday sunday unit.id %}', '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes,close=yes');
+                                    setTimeout(function() { openedWindow.close();}, 3000);
+                                    "
+                        ></button>
+                    </h2>
 
                         <table  class="table table-bordered border-5 border-dark">
                             <thead>
