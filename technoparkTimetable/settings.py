@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'captcha',
     'phonenumber_field',
     'rest_framework',
+    'corsheaders',
 
     'users',
     'timetable.apps.TimetableConfig',
@@ -81,9 +82,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'technoparkTimetable.urls'
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3030',
+]
 
 TEMPLATES = [
     {
