@@ -10,12 +10,7 @@ from users.models.university import Auditorium, University_Unit
 
 
 def json_to_excel(university_id, monday: str, sunday: str):
-    """
-Creates an Excel file.
-Keyword arguments:
-json_couples (str): link to JSON file with pairs
-json_list (str): link to JSON file with audiences (default "http://tpbook2.shgpi/api/v0/get-auditoriums/?format=json")
-    """
+
     json_list = Auditorium.objects.filter(
         university_unit__show_in_timetable=True,
         university_unit_id=university_id
