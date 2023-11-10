@@ -18,8 +18,9 @@ class ExcelDownloadWeekView(View):
         # json_couples = f"http://tpbook2.shgpi/api/v0/get-booking-week/{university_id}/{monday}-{sunday}/?format=json"
         # json_list = f"http://tpbook2.shgpi/api/v0/get-auditoriums/?format=json"
         file_path = json_to_excel(
-            json_couples=json_couples,
-            json_list=json_list
+            university_id,
+            monday,
+            sunday,
         )
 
         # Проверьте существование файла

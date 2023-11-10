@@ -2,21 +2,31 @@
 Module for creating a schedule in the classrooms of the ShSPU Technopark.
 """
 import os
-
-import requests
-import json
 import openpyxl.styles
 import datetime
 import copy
+from timetable.models.timetable import TimetableItem, Type_TimetableItem
+from users.models.university import Auditorium, University_Unit
 
 
-def json_to_excel(json_couples, json_list="http://tpbook2.shgpi/api/v0/get-auditoriums/?format=json"):
+def json_to_excel(university_id, monday: str, sunday: str):
     """
 Creates an Excel file.
 Keyword arguments:
 json_couples (str): link to JSON file with pairs
 json_list (str): link to JSON file with audiences (default "http://tpbook2.shgpi/api/v0/get-auditoriums/?format=json")
     """
+    json_list = Auditorium.objects.filter(
+        university_unit__show_in_timetable=True,
+        university_unit_id=university_id
+    ).all()
+    start_week = datetime.datetime.strptime(monday, '%d_%m_%y').date()
+    end_week = datetime.datetime.strptime(sunday, '%d_%m_%y').date()
+    json_couples = TimetableItem.objects.filter(
+            auditorium__university_unit_id=university_id,
+            date__range=[start_week, end_week],
+            status='APPROVED',
+        ).all().order_by('date', 'start_time')
     weekdays = (
         "ПН",
         "ВТ",
@@ -42,26 +52,21 @@ json_list (str): link to JSON file with audiences (default "http://tpbook2.shgpi
     path = os.getcwd()
     sym_count = 0
     skip = False
-    response = requests.get(json_list)
-    if response.status_code == 200:
-        data = json.loads(response.text)
-    else:
-        return "ERROR"
-    auditoriums_num = len(data)
+    auditoriums_num = len(json_list)
     schedule = openpyxl.Workbook()
     schedule.remove(schedule.active)
     sheet = schedule.create_sheet("Расписание")
     sheet.freeze_panes = "C3"
     sheet.row_dimensions[1].height = 25
     sheet.row_dimensions[2].height = 70
-    for auditorium in data:
+    for auditorium in json_list:
         sheet.column_dimensions[alphabet[let_num]].width = 60
-        couples_indexes[auditorium["name"]] = []
-        sheet[f"{alphabet[let_num]}1"] = auditorium["name"]
+        couples_indexes[auditorium.name] = []
+        sheet[f"{alphabet[let_num]}1"] = auditorium.name
         sheet[f"{alphabet[let_num]}1"].font = openpyxl.styles.Font(name="Times New Roman", size=22, bold=True)
         sheet[f"{alphabet[let_num]}1"].alignment = openpyxl.styles.Alignment(horizontal="center", vertical="center")
         sheet[f"{alphabet[let_num]}1"].border = openpyxl.styles.Border(left=openpyxl.styles.Side(style="thin"))
-        sheet[f"{alphabet[let_num]}2"] = auditorium["info"]
+        sheet[f"{alphabet[let_num]}2"] = auditorium.info
         sheet[f"{alphabet[let_num]}2"].font = openpyxl.styles.Font(name="Times New Roman", size=12)
         sheet[f"{alphabet[let_num]}2"].alignment = openpyxl.styles.Alignment(horizontal="center", vertical="center",
                                                                              wrap_text=True)
@@ -69,7 +74,7 @@ json_list (str): link to JSON file with audiences (default "http://tpbook2.shgpi
                                                                        left=openpyxl.styles.Side(style="thin"))
         if let_num == 2:
             sheet["B1"].border = openpyxl.styles.Border(right=openpyxl.styles.Side(style="thick"))
-        elif len(data) == let_num - 1:
+        elif len(json_list) == let_num - 1:
             sheet.column_dimensions[alphabet[let_num + 1]].width = 50
             sheet[f"{alphabet[let_num + 1]}1"] = "Мероприятия"
             sheet[f"{alphabet[let_num + 1]}1"].font = openpyxl.styles.Font(name="Times New Roman", size=22, bold=True)
@@ -84,14 +89,9 @@ json_list (str): link to JSON file with audiences (default "http://tpbook2.shgpi
                 left=openpyxl.styles.Side(style="thin"))
         let_num += 1
     aud_index = let_num
-    response = requests.get(json_couples)
-    if response.status_code == 200:
-        data = json.loads(response.text)
-    else:
-        return "ERROR"
     sheet.column_dimensions['A'].width = 15
     sheet[f"A{row_num}"].border = openpyxl.styles.Border(top=openpyxl.styles.Side(style="thick"))
-    date = datetime.datetime(int(data["start_week"][:4]), int(data["start_week"][5:7]), int(data["start_week"][8:10]))
+    date = start_week
     for day in weekdays:
         sheet[f"A{row_num}"] = day
         sheet[f"A{row_num + 2}"] = f"{date.day}.{date.month}.{date.year}"
@@ -126,20 +126,20 @@ json_list (str): link to JSON file with audiences (default "http://tpbook2.shgpi
                                                              right=openpyxl.styles.Side(style="thick"))
         skip = True
         times_index += 1
-    for info in data["results"]:
-        if info["auditorium"][0]["name"] in couples_indexes:
-            couples_indexes[info["auditorium"][0]["name"]].append(data["results"].index(info))
+    for info in json_couples:
+        if info.auditorium.all()[0].name in couples_indexes:
+            couples_indexes[info.auditorium.all()[0].name].append(list(json_couples).index(info))
     couples_indexes_copy = copy.deepcopy(couples_indexes)
     for key, value in couples_indexes.items():
         for index_value in value:
-            info = data["results"][index_value]["name"]
+            info = json_couples[index_value].name
             if info.rfind('.') != -1 and info.rfind('.') != len(info) - 1:
                 teacher_name = info[:info.rfind('.') + 1]
                 info = (f"{info[info.rfind('.') + 2:].replace(f' {key}', '')}"
-                        f"{data['results'][index_value]['info'].split('группы')[1]}")
+                        f"{json_couples[index_value].info.split('группы')[1]}")
             elif info.rfind('.') == -1:
-                if data["results"][index_value]["info"].count('.') == 2:
-                    teacher_name = data["results"][index_value]["info"]
+                if json_couples[index_value].info.count('.') == 2:
+                    teacher_name = json_couples[index_value].info
                 else:
                     teacher_name = ''
             else:
@@ -151,7 +151,7 @@ json_list (str): link to JSON file with audiences (default "http://tpbook2.shgpi
                         teacher_name = info[index_info + 1:len(info)]
                         info = info[:index_info - 2].replace(f" {key}", '')
                         break
-                info += data["results"][index_value]["info"].split("группы")[1]
+                info += json_couples[index_value]["info"].split("группы")[1]
             for let_num in range(len(couples_indexes)):
                 if sheet[f"{alphabet[let_num + 2]}1"].value == key:
                     times_index = 0
@@ -168,17 +168,21 @@ json_list (str): link to JSON file with audiences (default "http://tpbook2.shgpi
                         skip = True
                         times_index += 1
                         excel_date = sheet[f"A{day_index}"].value.split('.')
-                        data_date = data["results"][index_value]["date"].split('-')
+                        data_date = str(json_couples[index_value].date).split('-')
                         excel_start_time = datetime.time(int(sheet[f"B{row_num}"].value.split('-')[0].split(':')[0]),
                                                          int(sheet[f"B{row_num}"].value.split('-')[0].split(':')[1]))
-                        data_start_time = datetime.time(int(data["results"][index_value]["start_time"].split(':')[0]),
-                                                        int(data["results"][index_value]["start_time"].split(':')[1]))
+                        data_start_time = datetime.time(
+                            int(str(json_couples[index_value].start_time).split(':')[0]),
+                            int(str(json_couples[index_value].start_time).split(':')[1])
+                        )
                         excel_end_time = datetime.time(int(sheet[f"B{row_num}"].value.split('-')[1].split(':')[0]),
                                                        int(sheet[f"B{row_num}"].value.split('-')[1].split(':')[1]))
-                        data_end_time = datetime.time(int(data["results"][index_value]["end_time"].split(':')[0]),
-                                                      int(data["results"][index_value]["end_time"].split(':')[1]))
+                        data_end_time = datetime.time(
+                            int(str(json_couples[index_value].end_time).split(':')[0]),
+                            int(str(json_couples[index_value].end_time).split(':')[1])
+                        )
                         if (datetime.date(int(excel_date[2]), int(excel_date[1]), int(excel_date[0]))
-                                == datetime.date(int(data_date[2]), int(data_date[1]), int(data_date[0]))
+                                == datetime.date(int(data_date[0]), int(data_date[1]), int(data_date[2]))
                                 and excel_start_time == data_start_time and excel_end_time == data_end_time
                                 and sheet[f"{alphabet[let_num + 2]}{row_num}"].value is None
                                 and sheet[f"{alphabet[let_num + 2]}{row_num + 1}"].value is None):
@@ -197,7 +201,7 @@ json_list (str): link to JSON file with audiences (default "http://tpbook2.shgpi
     couples_indexes = copy.deepcopy(couples_indexes_copy)
     for key, value in couples_indexes.items():
         for index_value in value:
-            info = data["results"][index_value]["name"]
+            info = json_couples[index_value].name
             for let_num in range(len(couples_indexes)):
                 if sheet[f"{alphabet[let_num + 2]}1"].value == key:
                     times_index = 0
@@ -214,19 +218,21 @@ json_list (str): link to JSON file with audiences (default "http://tpbook2.shgpi
                         skip = True
                         times_index += 1
                         excel_date = sheet[f"A{day_index}"].value.split('.')
-                        data_date = data["results"][index_value]["date"].split('-')
-                        data_end_time = datetime.time(int(data["results"][index_value]["end_time"].split(':')[0]),
-                                                      int(data["results"][index_value]["end_time"].split(':')[1]))
+                        data_date = str(json_couples[index_value].date).split('-')
+                        data_end_time = datetime.time(
+                            int(str(json_couples[index_value].end_time).split(':')[0]),
+                            int(str(json_couples[index_value].end_time).split(':')[1])
+                        )
                         excel_end_time = datetime.time(int(sheet[f"B{row_num}"].value.split('-')[1].split(':')[0]),
                                                        int(sheet[f"B{row_num}"].value.split('-')[1].split(':')[1]))
                         if (datetime.date(int(excel_date[2]), int(excel_date[1]), int(excel_date[0]))
-                                == datetime.date(int(data_date[2]), int(data_date[1]), int(data_date[0]))
+                                == datetime.date(int(data_date[0]), int(data_date[1]), int(data_date[2]))
                                 and sheet[f"{alphabet[let_num + 2]}{row_num}"].value is None
                                 and sheet[f"{alphabet[let_num + 2]}{row_num + 1}"].value is None
                                 and excel_end_time >= data_end_time and index_value in couples_indexes_copy[key]):
                             sheet[f"{alphabet[let_num + 2]}{row_num}"] = \
-                                (f"{key} {data['results'][index_value]['start_time'][:-3]}-"
-                                 f"{data['results'][index_value]['end_time'][:-3]}")
+                                (f"{key} {str(json_couples[index_value].start_time)[:-3]}-"
+                                 f"{str(json_couples[index_value].end_time)[:-3]}")
                             sheet[f"{alphabet[let_num + 2]}{row_num + 1}"] = info
                             couples_indexes_copy[key].remove(index_value)
                             sheet[f"{alphabet[let_num + 2]}{row_num}"].font = openpyxl.styles.Font(
@@ -241,7 +247,7 @@ json_list (str): link to JSON file with audiences (default "http://tpbook2.shgpi
     couples_indexes = copy.deepcopy(couples_indexes_copy)
     for key, value in couples_indexes.items():
         for index_value in value:
-            info = data["results"][index_value]["name"]
+            info = json_couples[index_value]["name"]
             times_index = 0
             day_index = 5
             skip = False
@@ -256,15 +262,15 @@ json_list (str): link to JSON file with audiences (default "http://tpbook2.shgpi
                 skip = True
                 times_index += 1
                 excel_date = sheet[f"A{day_index}"].value.split('.')
-                data_date = data["results"][index_value]["date"].split('-')
+                data_date = json_couples[index_value]["date"].split('-')
                 if (datetime.date(int(excel_date[2]), int(excel_date[1]), int(excel_date[0]))
                         == datetime.date(int(data_date[2]), int(data_date[1]), int(data_date[0]))
                         and sheet[f"{alphabet[aud_index]}{row_num}"].value is None
                         and sheet[f"{alphabet[aud_index]}{row_num + 1}"].value is None
                         and index_value in couples_indexes_copy[key]):
                     sheet[f"{alphabet[aud_index]}{row_num}"] = \
-                        (f"{key} {data['results'][index_value]['start_time'][:-3]}-"
-                         f"{data['results'][index_value]['end_time'][:-3]}")
+                        (f"{key} {json_couples[index_value]['start_time'][:-3]}-"
+                         f"{json_couples[index_value]['end_time'][:-3]}")
                     sheet[f"{alphabet[aud_index]}{row_num + 1}"] = info
                     sheet[f"{alphabet[aud_index]}{row_num}"].font = openpyxl.styles.Font(name="Times New Roman",
                                                                                          size=12)
