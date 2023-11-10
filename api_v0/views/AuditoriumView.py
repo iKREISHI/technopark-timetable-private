@@ -1,6 +1,6 @@
 from datetime import date, timedelta
 from rest_framework import generics
-from api_v0.serializers.University import AuditoriumSerializer, AuditoriumsSerializer
+from api_v0.serializers.University import AuditoriumSerializer, AuditoriumsSerializer, UniversityUnitSerializer
 from users.models.university import Auditorium, Auditorium_Type, University_Unit
 
 
@@ -41,4 +41,14 @@ class getAuditoriumByUUListAPIView(generics.ListAPIView):
             university_unit__show_in_timetable=True,
             university_unit=University_Unit.objects.get(id=id_university_unit),
         )
+        return queryset
+
+
+class getUniversityUnitListAPIView(generics.ListAPIView):
+    serializer_class = UniversityUnitSerializer
+
+    def get_queryset(self):
+        queryset = University_Unit.objects.filter(
+            show_in_timetable=True,
+        ).all()
         return queryset
