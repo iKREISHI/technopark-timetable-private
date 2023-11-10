@@ -1,6 +1,6 @@
 from django.urls import include, path
 from export2xlsx.views.test import my_view
-from export2xlsx.views.views import ExcelDownloadWeekView
+from export2xlsx.views.export2excel import ExcelDownloadWeekView
 
 urlpatterns = [
     # path(
