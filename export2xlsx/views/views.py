@@ -11,14 +11,6 @@ from export2xlsx.converter.converter import json_to_excel
 class ExcelDownloadWeekView(View):
 
     def get(self, request, monday: str, sunday: str, university_id: int, *args, **kwargs):
-        # Получите полный путь к файлу на сервере
-        # port = '8000'
-        # domain = f'{request.META['HTTP_HOST']}:{port}'
-        domain = request.META['HTTP_HOST']
-        json_couples = f"http://{domain}/api/v0/get-booking-week/{university_id}/{monday}-{sunday}/?format=json"
-        json_list = f"http://{domain}/api/v0/get-auditoriums/{university_id}/?format=json"
-        # json_couples = f"http://tpbook2.shgpi/api/v0/get-booking-week/{university_id}/{monday}-{sunday}/?format=json"
-        # json_list = f"http://tpbook2.shgpi/api/v0/get-auditoriums/?format=json"
         file_path = json_to_excel(
             university_id,
             monday,
