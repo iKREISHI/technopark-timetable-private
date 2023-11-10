@@ -14,7 +14,8 @@ from api_v0.views.BookingCreate import BookingCreateAPIView, ReservationCreateAP
 from api_v0.views.AuditoriumView import (
     getAuditoriumAPIView,
     getAuditoriumsListAPIView,
-    getAuditoriumByUUListAPIView, getAuditoriumByUUAPIView
+    getAuditoriumByUUListAPIView, getAuditoriumByUUAPIView,
+    getUniversityUnitListAPIView
 )
 
 
@@ -72,5 +73,9 @@ urlpatterns = [
         'get-booking-current-week/<int:id_university_unit>/',
         BookingByUUCurrentWeekListAPIView.as_view(),
         name='get-booking-current-week-by-uu',
+    ),
+    path(
+        'get-university-unit/', getUniversityUnitListAPIView.as_view(),
+        name='get-university-unit'
     ),
 ]
