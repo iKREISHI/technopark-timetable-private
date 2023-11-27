@@ -16,6 +16,7 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Yekaterinburg /etc/localtime
 RUN echo "Asia/Yekaterinburg" > /etc/timezone
 
 RUN apt-get install -y postgresql-client cron vim mc procps libpq-dev python3-requests
+RUN apt-get install -y librabbitmq-dev libssh-dev libpq-dev
 
 RUN pip install --upgrade pip
 COPY ./requirements.txt .
