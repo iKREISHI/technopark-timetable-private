@@ -29,3 +29,7 @@ $RECYCLE.BIN/
 *.pyc
 *~
 __pycache__
+
+# env
+.env
+.env.prod

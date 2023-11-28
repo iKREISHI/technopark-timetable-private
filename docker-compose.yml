@@ -10,9 +10,9 @@ services:
       - static_volume:/usr/src/app/static
       - media_volume:/usr/src/app/media
     ports:
-      - 8000:8000
+      - 8001:8001
     env_file:
-      - ./.env.dev
+      - ./.env.prod
     depends_on:
       - db
     networks:
@@ -53,6 +53,8 @@ services:
       - ./backups:/backups
     links:
       - db
+    ports:
+      - 8888:8888
     depends_on:
       - db
     environment:
