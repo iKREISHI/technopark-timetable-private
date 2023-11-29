@@ -162,7 +162,7 @@ class BookingByUUListAPIView(BookingWeekMinimalAPIView):
             date__range=[start_week, end_week],
             status='APPROVED',
         ).all().order_by('date', 'start_time')
-
+        # queryset[0].auditorium__university_unit_id = 0
         return queryset
 
 

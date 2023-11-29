@@ -2,16 +2,21 @@ version: "3.9"
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+#    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn technoparkTimetable.wsgi:application --bind 0.0.0.0:8001
     restart: always
     volumes:
       - ./:/usr/src/app/
+      - static_volume:/usr/src/app/static
+      - media_volume:/usr/src/app/media
     ports:
-      - 80:8000
+      - 8001:8001
     env_file:
-      - ./.env.dev
+      - ./.env.prod
     depends_on:
       - db
+    networks:
+      - nginx_network
   db:
     image: postgres:13.3
     restart: always
@@ -24,5 +29,54 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     ports:
      - "5432:5432"
+    networks:
+      - nginx_network
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./config/docker/nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/usr/src/app/static  # <-- bind the static volume
+      - media_volume:/usr/src/app/media  # <-- bind the media volume
+    depends_on:
+      - web
+    networks:
+      - nginx_network
+
+  pgbackups:
+    image: prodrigestivill/postgres-backup-local
+    restart: always
+    user: postgres:postgres # Optional: see below
+    volumes:
+      - ./backups:/backups
+    links:
+      - db
+    ports:
+      - 8888:8888
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=timetableDB
+      - POSTGRES_USER=root_timetable
+      - POSTGRES_PASSWORD=timetable@technopark.db
+      #  - POSTGRES_PASSWORD_FILE=/run/secrets/db_password <-- alternative for POSTGRES_PASSWORD (to use with docker secrets)
+      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+      - SCHEDULE=@daily
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=8888
+    networks:
+      - nginx_network
+
 volumes:
   postgres_data:
+  static_volume:
+  media_volume:
+
+networks:
+  nginx_network:
+    driver: bridge

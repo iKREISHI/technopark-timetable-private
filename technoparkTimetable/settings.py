@@ -14,6 +14,12 @@ import os
 from pathlib import Path
 
 from config.DataBase import *
+from config.config import (
+    DEBUG_CONFIG, SECRET_KEY_CONFIG,
+    DJANGO_ALLOWED_HOSTS_CONFIG,
+    DB_ENGINE, DB_DATABASE, DB_USER,
+    DB_PASSWORD, DB_HOST, DB_PORT
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,19 +29,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-w=3#r%4c!u)hk9mj+0+@ssth-*3*@k&bihmb-40b9=+4mvzy&h'
+# SECRET_KEY = 'django-insecure-w=3#r%4c!u)hk9mj+0+@ssth-*3*@k&bihmb-40b9=+4mvzy&h'
+SECRET_KEY = SECRET_KEY_CONFIG
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = DEBUG_CONFIG
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.0.10.228', '10.2.10.228', 'tpbook2.shgpi', 'tpbook.shgpi']
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.0.10.228', '10.2.10.228', 'tpbook2.shgpi', 'tpbook.shgpi']
+ALLOWED_HOSTS = DJANGO_ALLOWED_HOSTS_CONFIG
 
 # STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # STATIC_URL = 'static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-
+# # STATICFILES_DIRS = (
+# #     os.path.join(BASE_DIR, 'static'),
+# # )
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 APPEND_SLASH = False
 
@@ -92,6 +104,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3030',
+    'http://tpbook2.shgpi'
 ]
 
 TEMPLATES = [
@@ -128,12 +141,12 @@ DATABASES = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': POSTGRES_DB,
-        'USER': POSTGRES_USER,
-        'PASSWORD': POSTGRES_PASSWORD,
-        'HOST': POSTGRES_HOST,
-        'PORT': POSTGRES_PORT,
+        'ENGINE': DB_ENGINE,
+        'NAME': DB_DATABASE,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': DB_HOST,
+        'PORT': DB_PORT,
     }
 }
 
@@ -174,7 +187,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
+# STATIC_ROOT = BASE_DIR
 
 
 # Default primary key field type
