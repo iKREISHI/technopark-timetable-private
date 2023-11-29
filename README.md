@@ -12,3 +12,8 @@ python manage.py makemigrations
 python manage.py migrate 
 python manage.py runserver
 ```
+### Для сборки и запуска проекта в docker используйте:
+```bash
+cp -f .env.prod.sample .env.prod
+make build
+```

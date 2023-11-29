@@ -3,7 +3,7 @@ services:
   web:
     build: .
 #    command: python manage.py runserver 0.0.0.0:8000
-    command: gunicorn technoparkTimetable.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn technoparkTimetable.wsgi:application --bind 0.0.0.0:8001
     restart: always
     volumes:
       - ./:/usr/src/app/
