@@ -21,6 +21,7 @@ RUN apt-get install -y librabbitmq-dev libssh-dev libpq-dev
 RUN pip install --upgrade pip
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
-COPY . .
+COPY . /usr/src/app
+COPY .env.prod /usr/src/app/.env
 RUN chmod +x /usr/src/app/backup_script.sh
 

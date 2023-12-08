@@ -6,7 +6,7 @@ if not os.getenv('SECRET_KEY'):
     if os.path.exists(dotenv):
         load_dotenv(dotenv)
 
-DEBUG_CONFIG = int(os.getenv('DEBUG'))
+DEBUG_CONFIG = bool(int(os.getenv('DEBUG')))
 SECRET_KEY_CONFIG = os.getenv('SECRET_KEY')
 DJANGO_ALLOWED_HOSTS_CONFIG = os.getenv('DJANGO_ALLOWED_HOSTS').split(" ")
 CORS_ALLOWED_ORIGINS_CONFIG = os.getenv('CORS_ALLOWED_ORIGINS').split(" ")
