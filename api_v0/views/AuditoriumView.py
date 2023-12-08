@@ -2,6 +2,8 @@ from datetime import date, timedelta
 from rest_framework import generics
 from api_v0.serializers.University import AuditoriumSerializer, AuditoriumsSerializer, UniversityUnitSerializer
 from users.models.university import Auditorium, Auditorium_Type, University_Unit
+from django.db.models import Value, CharField
+from django.db.models.functions import Cast
 
 
 class getAuditoriumAPIView(generics.ListAPIView):
@@ -17,10 +19,14 @@ class getAuditoriumByUUAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         id_university_unit = self.kwargs['id_university_unit']
+        # queryset = Auditorium.objects.filter(
+        #     university_unit__show_in_timetable=True,
+        #     university_unit=University_Unit.objects.get(id=id_university_unit),
+        # ).all()
         queryset = Auditorium.objects.filter(
             university_unit__show_in_timetable=True,
             university_unit=University_Unit.objects.get(id=id_university_unit),
-        ).all()
+        ).order_by(Cast('name', CharField()), 'name')
         return queryset
 
 
