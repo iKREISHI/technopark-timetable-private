@@ -10,7 +10,8 @@ class getAuditoriumAPIView(generics.ListAPIView):
     serializer_class = AuditoriumSerializer
 
     def get_queryset(self):
-        queryset = Auditorium.objects.filter(university_unit__show_in_timetable=True).all()
+        queryset = (Auditorium.objects.filter(university_unit__show_in_timetable=True)
+                    .order_by(Cast('name', CharField()), 'name'))
         return queryset
 
 
