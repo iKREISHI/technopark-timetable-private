@@ -33,8 +33,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = SECRET_KEY_CONFIG
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = DEBUG_CONFIG
+DEBUG = False
+# DEBUG = DEBUG_CONFIG
 
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.0.10.228', '10.2.10.228', 'tpbook2.shgpi', 'tpbook.shgpi']
 ALLOWED_HOSTS = DJANGO_ALLOWED_HOSTS_CONFIG
