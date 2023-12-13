@@ -17,3 +17,12 @@ python manage.py runserver
 cp -f .env.prod.sample .env.prod
 make build
 ```
+## SSL HTTPS
+### Для получения сертификата
+```bash
+docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d tpbook2.shspu.ru  
+```
+### Обновление сертификата
+```bash
+docker compose run --rm certbot renew
+```
