@@ -146,8 +146,12 @@ def json_to_excel(university_id, monday: str, sunday: str):
                         teacher_name = info[index_info + 1:len(info)]
                         info = info[:index_info - 2].replace(f" {key}", '')
                         break
-                if json_couples[index_value]["type"]["name"] != "Мероприятие":
+                # if json_couples[index_value]["type"]["name"] != "Мероприятие":
+                try:
                     info += json_couples[index_value]["info"].split("группы")[1]
+                except Exception as e:
+                    print("error: ", e)
+                    # info += json_couples[index_value]["info"]
             for let_num in range(len(couples_indexes)):
                 if sheet[f"{alphabet[let_num + 2]}1"].value == key:
                     times_index = 0
