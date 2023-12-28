@@ -9,6 +9,7 @@ from timetable.views.import_shgpu_bot.config import *
 from django.contrib.auth.mixins import PermissionRequiredMixin, PermissionDenied, LoginRequiredMixin
 from timetable.views.import_shgpu_bot.connect import *
 from django.urls import reverse
+from django.db import IntegrityError
 
 
 class import_schedule:
@@ -63,6 +64,7 @@ class import_schedule:
                                 "start_time": self.time_pair[res[2]].split("-")[0],
                                 "end_time": self.time_pair[res[2]].split("-")[1],
                                 "date": day,
+                                # "auditorium": Auditorium.objects.get(name=res[0].split()[-1]),
                             }
                             group = {
                                 "name": res[-1],
@@ -71,6 +73,10 @@ class import_schedule:
                                 "aud": param["name"].split()[-1],
                             }
                             params = {
+                                "name": res[0].replace("/ ", ""),
+                                "start_time": self.time_pair[res[2]].split("-")[0],
+                                "end_time": self.time_pair[res[2]].split("-")[1],
+                                "date": day,
                                 "type": Type_TimetableItem.objects.get(name="Учебное занятие"),
                                 "organazer": user,
                                 "amount_people": 25,
@@ -84,27 +90,36 @@ class import_schedule:
                             #     params["status"] = "PENDING"
                             # Поиск существующей записи и ее изменение
                             for item in TimetableItem.objects.filter(
+                                name=res[0].replace("/ ", ""),
                                 date=param["date"], status='APPROVED',
                             ).all():
                                 if item.name.find(param["name"]) != -1:
                                     # item.name = param["name"]
                                     # info = item.info + " " + group
-                                    item.delete()
+                                    # item.delete()
                                     if group_old != '' and group_old["date"] == param["date"] and group_old["start_time"] == param["start_time"] and group_old["aud"] == param["name"].split()[-1]:
                                         params["info"] = params["info"] + "," + group_old["name"]
-                                    obj, created = TimetableItem.objects.update_or_create(defaults=params, **param)
-                                    if created:
-                                        print(f'--- Object was created successful - {res[0].replace("/ ", "")}')
-                                    else:
-                                        print(f'--- Object was updated: id={obj.id} name={param["name"]}')
+                                    try:
+                                        obj, created = TimetableItem.objects.update_or_create(defaults=params, **param)
+                                        obj.auditorium.set([Auditorium.objects.get(name=res[0].split()[-1])])
+                                        if created:
+                                            print(f'--Object was created successful - {res[0].replace("/ ", "")} | '
+                                                  f'{obj.id} {obj.name}')
+                                        else:
+                                            print(f'--Object was updated: id={obj.id} name={param["name"]} | '
+                                                  f'{obj.id} {obj.name}')
+                                    except IntegrityError as e:
+                                        print(f"Ошибка: {e}")
                                     break
-                            obj, created = TimetableItem.objects.update_or_create(defaults=params, **param)
-                            if created:
-                                print(f'Object was created successful - {res[0].replace("/ ", "")}')
+                            else:
+                                obj, created = TimetableItem.objects.update_or_create(defaults=params, **param)
+                                obj.auditorium.set([Auditorium.objects.get(name=res[0].split()[-1])])
+                                if created:
+                                    print(f'Object was created successful - {res[0].replace("/ ", "")} | {obj.name}')
                             # else:
                             #     print(f'Object was updated: id={obj.id} name={param["name"]}')
                                 # print(' '.join(str(param['name']).split()[:-1]))
-                            obj.auditorium.set([Auditorium.objects.get(name=res[0].split()[-1])])
+
                             group_old = group
                     except Exception as e:
                         print(f'error!: {e}')

@@ -19,7 +19,7 @@ class TimetableWeekView(View):
             'title': f'Расписание на неделю '
                      f'{monday} '
                      f'- {sunday}',
-            'auditoriums': auditoriums,
+            'auditoriums': auditoriums.order_by("name"),
             'start_week': mon,
             'end_week': sun,
         }

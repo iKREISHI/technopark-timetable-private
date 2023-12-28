@@ -20,7 +20,7 @@ class TimeTableCurrentWeekView(View):
         auditoriums = Auditorium.objects.all()
         context = {
             'title': f'Расписание на текущую неделю',
-            'auditoriums': auditoriums,
+            'auditoriums': auditoriums.order_by("name"),
             'university_unit': University_Unit.objects.filter(show_in_timetable=True).all(),
             'today': date.today(),
             'start_week': start_week,
