@@ -130,8 +130,11 @@ def json_to_excel(university_id, monday: str, sunday: str):
             info = json_couples[index_value].name
             if info.rfind('.') != -1 and info.rfind('.') != len(info) - 1:
                 teacher_name = info[:info.rfind('.') + 1]
-                info = (f"{info[info.rfind('.') + 2:].replace(f' {key}', '')}"
-                        f"{json_couples[index_value].info.split('группы')[1]}")
+                try:
+                    info = (f"{info[info.rfind('.') + 2:].replace(f' {key}', '')}"
+                            f"{json_couples[index_value].info.split('группы')[1]}")
+                except:
+            	    pass
             elif info.rfind('.') == -1:
                 if json_couples[index_value].info.count('.') == 2:
                     teacher_name = json_couples[index_value].info
