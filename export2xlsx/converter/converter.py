@@ -247,7 +247,10 @@ def json_to_excel(university_id, monday: str, sunday: str):
     couples_indexes = copy.deepcopy(couples_indexes_copy)
     for key, value in couples_indexes.items():
         for index_value in value:
-            info = json_couples[index_value]["name"]
+            try:
+                info = json_couples[index_value]["name"]
+            except:
+                pass
             times_index = 0
             day_index = 5
             skip = False
@@ -262,26 +265,30 @@ def json_to_excel(university_id, monday: str, sunday: str):
                 skip = True
                 times_index += 1
                 excel_date = sheet[f"A{day_index}"].value.split('.')
-                data_date = json_couples[index_value]["date"].split('-')
-                if (datetime.date(int(excel_date[2]), int(excel_date[1]), int(excel_date[0]))
-                        == datetime.date(int(data_date[2]), int(data_date[1]), int(data_date[0]))
-                        and sheet[f"{alphabet[aud_index]}{row_num}"].value is None
-                        and sheet[f"{alphabet[aud_index]}{row_num + 1}"].value is None
-                        and index_value in couples_indexes_copy[key]):
-                    sheet[f"{alphabet[aud_index]}{row_num}"] = \
-                        (f"{key} {json_couples[index_value]['start_time'][:-3]}-"
-                         f"{json_couples[index_value]['end_time'][:-3]}")
-                    sheet[f"{alphabet[aud_index]}{row_num + 1}"] = info
-                    sheet[f"{alphabet[aud_index]}{row_num}"].font = openpyxl.styles.Font(name="Times New Roman",
-                                                                                         size=12)
-                    sheet[f"{alphabet[aud_index]}{row_num}"].alignment = openpyxl.styles.Alignment(
-                        horizontal="center", vertical="center")
-                    sheet[f"{alphabet[aud_index]}{row_num + 1}"].font = openpyxl.styles.Font(
-                        name="Times New Roman", size=12)
-                    sheet[f"{alphabet[aud_index]}{row_num + 1}"].alignment = openpyxl.styles.Alignment(
-                        horizontal="center", vertical="center")
-                    couples_indexes_copy[key].remove(index_value)
-                    break
+                try:
+                    data_date = json_couples[index_value]["date"].split('-')
+
+                    if (datetime.date(int(excel_date[2]), int(excel_date[1]), int(excel_date[0]))
+                            == datetime.date(int(data_date[2]), int(data_date[1]), int(data_date[0]))
+                            and sheet[f"{alphabet[aud_index]}{row_num}"].value is None
+                            and sheet[f"{alphabet[aud_index]}{row_num + 1}"].value is None
+                            and index_value in couples_indexes_copy[key]):
+                        sheet[f"{alphabet[aud_index]}{row_num}"] = \
+                            (f"{key} {json_couples[index_value]['start_time'][:-3]}-"
+                             f"{json_couples[index_value]['end_time'][:-3]}")
+                        sheet[f"{alphabet[aud_index]}{row_num + 1}"] = info
+                        sheet[f"{alphabet[aud_index]}{row_num}"].font = openpyxl.styles.Font(name="Times New Roman",
+                                                                                             size=12)
+                        sheet[f"{alphabet[aud_index]}{row_num}"].alignment = openpyxl.styles.Alignment(
+                            horizontal="center", vertical="center")
+                        sheet[f"{alphabet[aud_index]}{row_num + 1}"].font = openpyxl.styles.Font(
+                            name="Times New Roman", size=12)
+                        sheet[f"{alphabet[aud_index]}{row_num + 1}"].alignment = openpyxl.styles.Alignment(
+                            horizontal="center", vertical="center")
+                        couples_indexes_copy[key].remove(index_value)
+                        break
+                except:
+                    pass
     for let_num in range(2, auditoriums_num + 3):
         times_index = 0
         skip = False
