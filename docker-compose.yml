@@ -4,7 +4,7 @@ services:
     build: .
 #    command: python manage.py runserver 0.0.0.0:8000
     command: gunicorn technoparkTimetable.wsgi:application --bind 0.0.0.0:8001
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./:/usr/src/app/
       - static_volume:/usr/src/app/static
@@ -19,7 +19,7 @@ services:
       - nginx_network
   db:
     image: postgres:13.3
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_DB: "timetableDB"
       POSTGRES_USER: "root_timetable"
@@ -33,7 +33,7 @@ services:
       - nginx_network
   nginx:
     image: nginx:latest
-    restart: always
+    restart: unless-stopped
     ports:
       - 80:80
     volumes:
@@ -47,7 +47,7 @@ services:
 
   pgbackups:
     image: prodrigestivill/postgres-backup-local
-    restart: always
+    restart: unless-stopped
     user: postgres:postgres # Optional: see below
     volumes:
       - ./backups:/backups
@@ -71,6 +71,39 @@ services:
       - HEALTHCHECK_PORT=8888
     networks:
       - nginx_network
+
+  celery_worker:
+    build: .
+    #    command: python manage.py runserver 0.0.0.0:8000
+    command: celery -A technoparkTimetable.celery_app worker --loglevel=info
+    restart: unless-stopped
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db
+      - rabbitmq
+    networks:
+      - nginx_network
+
+  celery_beat:
+    build: .
+    #    command: python manage.py runserver 0.0.0.0:8000
+    command: celery -A technoparkTimetable.celery_app beat --loglevel=info
+    restart: unless-stopped
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db
+      - rabbitmq
+    networks:
+      - nginx_network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
 volumes:
   postgres_data:
