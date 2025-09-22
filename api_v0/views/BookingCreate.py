@@ -29,7 +29,7 @@ class BookingCreateAPIView(generics.CreateAPIView):
 
         # print(serializer)
 
-        if date < datetime.date.today():
+        if date < datetime.date.today() and not self.request.user.is_superuser:
             raise serializers.ValidationError(
                 f'Невозможно забронировать аудиторию на прошедшую дату'
             )
