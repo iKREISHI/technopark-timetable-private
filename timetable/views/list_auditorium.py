@@ -5,7 +5,6 @@ from django.views.generic import ListView
 from timetable.models.timetable import TimetableItem
 from users.models.university import Auditorium
 from datetime import date, datetime, timedelta
-from timetable.models.week import Week
 
 
 # class ListAuditoriumView(LoginRequiredMixin, View):

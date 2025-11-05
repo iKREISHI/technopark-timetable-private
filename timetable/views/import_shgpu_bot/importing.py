@@ -1,3 +1,5 @@
+import logging
+
 from django.views import View
 from django.shortcuts import render, redirect
 from datetime import date, timedelta, datetime
@@ -39,11 +41,19 @@ class import_schedule:
         # sun = datetime.strptime(end_week, '%d_%m_%y').date()
         # if item.date >= start_week and item.date <= end_week
         results = []
-        conn = get_connection(
-            db=DATABASE_PG, user=USER_PG, password=PASSWORD_PG,
-            host=HOST_PG, port=PORT_PG
-        )
-        cursor = get_cursor(conn)
+        conn = ""
+        cursor = ""
+        try:
+            conn = get_connection(
+                db=DATABASE_PG, user=USER_PG, password=PASSWORD_PG,
+                host=HOST_PG, port=PORT_PG
+            )
+        except Exception as e:
+            logging.error(f"Connection error: {e}")
+        try:
+            cursor = get_cursor(conn)
+        except Exception as e:
+            logging.error(f"Cursor error: {e}")
         day = start_week
         group_old = ''
         while day <= end_week:

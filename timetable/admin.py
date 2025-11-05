@@ -1,6 +1,5 @@
 from django.contrib import admin
 from timetable.models.timetable import Type_TimetableItem, TimetableItem
-from .models.week import Week
 
 
 class TimetableItemAdminPanel(admin.ModelAdmin):
@@ -35,9 +34,5 @@ Type_TimetableItem._meta.verbose_name_plural = 'Типы мероприятия'
 TimetableItem._meta.verbose_name = 'Мероприятие'
 TimetableItem._meta.verbose_name_plural = 'Мероприятия'
 
-Week._meta.verbose_name = 'Неделя'
-Week._meta.verbose_name_plural = 'Недели'
-
 admin.site.register(Type_TimetableItem, TypeTimetableItemAdminPanel)
 admin.site.register(TimetableItem, TimetableItemAdminPanel)
-admin.site.register(Week, WeekAdminPanel)

@@ -39,11 +39,6 @@ DEBUG = DEBUG_CONFIG
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.0.10.228', '10.2.10.228', 'tpbook2.shgpi', 'tpbook.shgpi']
 ALLOWED_HOSTS = DJANGO_ALLOWED_HOSTS_CONFIG
 
-# STATIC_ROOT = os.path.join(BASE_DIR, "static")
-# STATIC_URL = 'static/'
-# # STATICFILES_DIRS = (
-# #     os.path.join(BASE_DIR, 'static'),
-# # )
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
