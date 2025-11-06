@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
-from config.DataBase import *
+# from config.DataBase import *
 from config.config import (
     DEBUG_CONFIG, SECRET_KEY_CONFIG,
     DJANGO_ALLOWED_HOSTS_CONFIG,
@@ -39,11 +39,6 @@ DEBUG = DEBUG_CONFIG
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.0.10.228', '10.2.10.228', 'tpbook2.shgpi', 'tpbook.shgpi']
 ALLOWED_HOSTS = DJANGO_ALLOWED_HOSTS_CONFIG
 
-# STATIC_ROOT = os.path.join(BASE_DIR, "static")
-# STATIC_URL = 'static/'
-# # STATICFILES_DIRS = (
-# #     os.path.join(BASE_DIR, 'static'),
-# # )
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
@@ -183,6 +178,14 @@ USE_I18N = True
 
 USE_TZ = False
 
+
+# Celery
+CELERY = {
+    'broker_url': os.environ.get('CELERY_BROKER_URL'),
+    'worker_hijack_root_logger': False,
+    'timezone': TIME_ZONE,
+    'beat_schedule': 'django_celery_beat.schedulers:DatabaseScheduler',
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/

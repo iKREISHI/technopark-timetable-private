@@ -43,3 +43,18 @@ rebuild-compose:
 
 backup:
 	docker-compose exec web ./backup_script.sh
+
+dev: dev-containers migrate
+
+migrate:
+	venv/bin/python manage.py makemigrations
+	venv/bin/python manage.py migrate
+
+load-data:
+	venv/bin/python manage.py loaddata users_data.json
+	venv/bin/python manage.py loaddata timetable_data.json
+
+dev-containers:
+	docker-compose up db -d
+	# docker-compose up nginx -d
+	docker-compose up rabbitmq -d

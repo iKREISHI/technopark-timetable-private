@@ -3,83 +3,91 @@
 {% load bootstrap5 %}
 
 {% block content %}
-<h1 style="text-align: center">{{ title }}</h1><hr>
+    <h1 style="text-align: center">{{ title }}</h1>
+    <hr>
 
-
-<div class="row align-items-center" align="center">
-    <div class="col">
-        <a class="btn btn-dark" data-bs-toggle="collapse"
-         href="#last_weeks" role="button" aria-expanded="false"
-         aria-controls="last_weeks"
-      >
-          Расписание на прошедшие недели
-      </a>
-    </div>
-    <div class="col">
-      <a class="btn btn-success" data-bs-toggle="collapse"
-         href="#current_weeks" role="button" aria-expanded="false"
-         aria-controls="current_weeks"
-      >
-          Расписание на текущий месяц
-      </a>
-    </div>
-    <div class="col">
-      <a class="btn btn-primary" data-bs-toggle="collapse"
-         href="#next_weeks" role="button" aria-expanded="false"
-         aria-controls="next_weeks"
-      >
-          Расписание на следующие недели
-      </a>
-    </div>
-</div>
-<div style="text-align: center">
-    <div class="collapse multi-collapse show" id="current_weeks">
-      <div class="card card-body">
-        {% for week in weeks %}
-            {% if week.is_current_week %}
-                <p>
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'list-auditoriums' week.monday  week.sunday %}">{{ week.monday }} - {{ week.sunday }}</a>
-                    {% else %}
-                        <a href="{% url 'schedule' week.monday  week.sunday %}">{{ week.monday }} - {{ week.sunday }}</a>
-                    {% endif %}
-                </p>
-            {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-    <div class="collapse multi-collapse" id="last_weeks">
-      <div class="card card-body">
-        {% for week in weeks|dictsortreversed:"start_day" %}
-            {% if week.is_last_week %}
-                <p>
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'list-auditoriums' week.monday  week.sunday %}">{{ week.monday }} - {{ week.sunday }}</a>
-                    {% else %}
-                        <a href="{% url 'schedule' week.monday  week.sunday %}">{{ week.monday }} - {{ week.sunday }}</a>
-                    {% endif %}
-                </p>
-            {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-    <div class="collapse multi-collapse" id="next_weeks">
-      <div class="card card-body">
-        {% for week in weeks|dictsort:"start_day" %}
-            {% if week.is_next_week %}
-                <p>
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'list-auditoriums' week.monday  week.sunday %}">{{ week.monday }} - {{ week.sunday }}</a>
-                    {% else %}
-                        <a href="{% url 'schedule' week.monday  week.sunday %}">{{ week.monday }} - {{ week.sunday }}</a>
-                    {% endif %}
-                </p>
-            {% endif %}
-        {% endfor %}
-      </div>
+    <div class="container mb-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8">
+                <div class="d-flex gap-2 align-items-center">
+                    <input
+                            id="week-date"
+                            class="form-control"
+                            type="date"
+                            aria-label="Выберите день недели"
+                    />
+                    <button id="go-week" class="btn btn-success">Показать</button>
+                </div>
+                <div id="week-hint" class="form-text">
+                    Выберите любую дату недели. Будет открыто расписание на неделю.
+                </div>
+            </div>
+        </div>
     </div>
 
-</div>
+    <script>
+        (function () {
+            const input = document.getElementById('week-date');
+            const goBtn = document.getElementById('go-week');
 
+            // Форматирование DD_MM_YY
+            function pad2(n) {
+                return String(n).padStart(2, '0');
+            }
+
+            function toDdMmYy(d) {
+                const dd = pad2(d.getDate());
+                const mm = pad2(d.getMonth() + 1);
+                const yy = pad2(d.getFullYear() % 100);
+                return dd + '_' + mm + '_' + yy;
+            }
+
+            // Границы недели понедельник-воскресенье
+            function getWeekBounds(date) {
+                const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                // JS: 0=вс,1=пн,...6=сб. Переводим к 0=пн,...6=вс
+                const dayMon0 = (d.getDay() + 6) % 7;
+                const monday = new Date(d);
+                monday.setDate(d.getDate() - dayMon0);
+                const sunday = new Date(monday);
+                sunday.setDate(monday.getDate() + 6);
+                return {monday, sunday};
+            }
+
+            // Переадресация
+            function navigateWeek() {
+                const value = input.value; // формат yyyy-mm-dd
+                if (!value) {
+                    input.focus();
+                    return;
+                }
+                const parts = value.split('-').map(Number);
+                // Гарантированная корректная дата из input[type=date]
+                const picked = new Date(parts[0], parts[1] - 1, parts[2]);
+                const {monday, sunday} = getWeekBounds(picked);
+                const startStr = toDdMmYy(monday);
+                const endStr = toDdMmYy(sunday);
+                {% if user.is_authenticated %}
+                    const url = '/timetable/list-auditoriums/' + startStr + '-' + endStr;
+                {% else %}
+                    const url = '/timetable/schedule/' + startStr + '-' + endStr;
+                {% endif %}
+                window.location.assign(url);
+            }
+
+            goBtn.addEventListener('click', navigateWeek);
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') navigateWeek();
+            });
+
+            (function setToday() {
+                const now = new Date();
+                const yyyy = now.getFullYear();
+                const mm = String(now.getMonth() + 1).padStart(2, '0');
+                const dd = String(now.getDate()).padStart(2, '0');
+                input.value = yyyy + '-' + mm + '-' + dd;
+            })();
+        })();
+    </script>
 
 {% endblock %}

@@ -1,10 +1,9 @@
-version: "3.9"
 services:
   web:
     build: .
 #    command: python manage.py runserver 0.0.0.0:8000
     command: gunicorn technoparkTimetable.wsgi:application --bind 0.0.0.0:8001
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./:/usr/src/app/
       - static_volume:/usr/src/app/static
@@ -19,11 +18,11 @@ services:
       - nginx_network
   db:
     image: postgres:13.3
-    restart: always
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: "timetableDB"
-      POSTGRES_USER: "root_timetable"
-      POSTGRES_PASSWORD: "timetable@technopark.db"
+      POSTGRES_DB: ${DB_DATABASE:-database}
+      POSTGRES_USER: ${DB_USER:-user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
@@ -33,13 +32,13 @@ services:
       - nginx_network
   nginx:
     image: nginx:latest
-    restart: always
+    restart: unless-stopped
     ports:
       - 80:80
     volumes:
       - ./config/docker/nginx/conf.d:/etc/nginx/conf.d
-      - static_volume:/usr/src/app/static  # <-- bind the static volume
-      - media_volume:/usr/src/app/media  # <-- bind the media volume
+      - static_volume:/usr/src/app/static
+      - media_volume:/usr/src/app/media
     depends_on:
       - web
     networks:
@@ -47,8 +46,8 @@ services:
 
   pgbackups:
     image: prodrigestivill/postgres-backup-local
-    restart: always
-    user: postgres:postgres # Optional: see below
+    restart: unless-stopped
+    user: postgres:postgres
     volumes:
       - ./backups:/backups
     links:
@@ -62,7 +61,6 @@ services:
       - POSTGRES_DB=timetableDB
       - POSTGRES_USER=root_timetable
       - POSTGRES_PASSWORD=timetable@technopark.db
-      #  - POSTGRES_PASSWORD_FILE=/run/secrets/db_password <-- alternative for POSTGRES_PASSWORD (to use with docker secrets)
       - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
       - SCHEDULE=@daily
       - BACKUP_KEEP_DAYS=7
@@ -71,6 +69,37 @@ services:
       - HEALTHCHECK_PORT=8888
     networks:
       - nginx_network
+
+  celery_worker:
+    build: .
+    command: celery -A technoparkTimetable.celery_app worker --loglevel=info
+    restart: unless-stopped
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db
+      - rabbitmq
+    networks:
+      - nginx_network
+
+  celery_beat:
+    build: .
+    command: celery -A technoparkTimetable.celery_app beat --loglevel=info
+    restart: unless-stopped
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db
+      - rabbitmq
+    networks:
+      - nginx_network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
 volumes:
   postgres_data:
