@@ -1,4 +1,4 @@
-from .importing import import_schedule
+from .importing import ImportSchedule
 from technoparkTimetable.celery_app import app as celery_app
 import datetime
 from users.models import User
@@ -21,7 +21,7 @@ def import_schedule_from_shspu_bot():
     print("Начало недели:", start_of_week)
     print("Конец недели:", end_of_week)
 
-    importing = import_schedule
+    importing = ImportSchedule
     # Указываем имя пользователя, email и пароль
     username = 'auto-import-bot'
     email = 'auto-import-bot@mail.ru'
