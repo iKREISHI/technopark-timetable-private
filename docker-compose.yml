@@ -1,7 +1,6 @@
 services:
   web:
     build: .
-#    command: python manage.py runserver 0.0.0.0:8000
     command: gunicorn technoparkTimetable.wsgi:application --bind 0.0.0.0:8001
     restart: unless-stopped
     volumes:
@@ -69,37 +68,6 @@ services:
       - HEALTHCHECK_PORT=8888
     networks:
       - nginx_network
-
-  celery_worker:
-    build: .
-    command: celery -A technoparkTimetable.celery_app worker --loglevel=info
-    restart: unless-stopped
-    env_file:
-      - ./.env.prod
-    depends_on:
-      - db
-      - rabbitmq
-    networks:
-      - nginx_network
-
-  celery_beat:
-    build: .
-    command: celery -A technoparkTimetable.celery_app beat --loglevel=info
-    restart: unless-stopped
-    env_file:
-      - ./.env.prod
-    depends_on:
-      - db
-      - rabbitmq
-    networks:
-      - nginx_network
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    restart: unless-stopped
-    ports:
-      - "5672:5672"
-      - "15672:15672"
 
 volumes:
   postgres_data:
